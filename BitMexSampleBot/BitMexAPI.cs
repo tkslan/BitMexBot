@@ -309,7 +309,6 @@ namespace BitMEX
         public string Side { get; set; }
         public double Price { get; set; }
         public int Size { get; set; }
-        public double? Price2 { get; set; }
     }
 
     public class Instrument
