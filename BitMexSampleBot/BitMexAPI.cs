@@ -330,6 +330,10 @@ namespace BitMEX
         public int PCC { get; set; }
         public double? MA1 { get; set; }
         public double? MA2 { get; set; }
+        public double? BBUpper { get; set; }
+        public double? BBMiddle { get; set; }
+        public double? BBLower { get; set; }
+        public double? BBMultiplier { get; set; }
     }
 
     public class Position
