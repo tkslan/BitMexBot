@@ -333,7 +333,6 @@ namespace BitMEX
         public double? BBUpper { get; set; }
         public double? BBMiddle { get; set; }
         public double? BBLower { get; set; }
-        public double? BBMultiplier { get; set; }
     }
 
     public class Position
