@@ -40,6 +40,10 @@ namespace BitMexSampleBot
         List<Position> OpenPositions = new List<Position>();
         List<Order> OpenOrders = new List<Order>();
 
+        // NEW - For BBand Indicator Info, 20, close 2
+        int BBLength = 20;
+        double BBMultiplier = 2;
+
         public Form1()
         {
             InitializeComponent();
@@ -212,6 +216,26 @@ namespace BitMexSampleBot
                     // Get the moving average over the last X periods using closing -- INCLUDES CURRENT CANDLE <=
                     c.MA2 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(MA2Period).Average(a => a.Close);
                 } // With not enough candles, we don't set to 0, we leave it null.
+
+                if (c.PCC > BBLength) // New
+                {
+                    // BBand calculation available on trading view wiki: https://www.tradingview.com/wiki/Bollinger_Bands_(BB)
+                    // You might need to also google how to calculate standard deviation as well: https://stackoverflow.com/questions/14635735/how-to-efficiently-calculate-a-moving-standard-deviation
+
+                    // BBMiddle is just 20 period moving average
+                    c.BBMiddle = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(BBLength).Average(a => a.Close);
+
+                    // Calculating the std deviation is important, and the hard part.
+                    double total_squared = 0;
+                    double total_for_average = Convert.ToDouble(Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(BBLength).Sum(a => a.Close));
+                    foreach (Candle cb in Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(BBLength).ToList())
+                    {
+                        total_squared += Math.Pow(Convert.ToDouble(cb.Close), 2);
+                    }
+                    double stdev = Math.Sqrt((total_squared - Math.Pow(total_for_average, 2) / BBLength) / BBLength);
+                    c.BBUpper = c.BBMiddle + (stdev * BBMultiplier);
+                    c.BBLower = c.BBMiddle - (stdev * BBMultiplier);
+                }
 
             }
 
