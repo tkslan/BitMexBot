@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnBuy = new System.Windows.Forms.Button();
             this.btnSell = new System.Windows.Forms.Button();
             this.nudQty = new System.Windows.Forms.NumericUpDown();
@@ -41,25 +41,25 @@
             this.dgvCandles = new System.Windows.Forms.DataGridView();
             this.ddlCandleTimes = new System.Windows.Forms.ComboBox();
             this.gbCandles = new System.Windows.Forms.GroupBox();
-            this.tmrCandleUpdater = new System.Windows.Forms.Timer(this.components);
-            this.chkUpdateCandles = new System.Windows.Forms.CheckBox();
-            this.nudMA1 = new System.Windows.Forms.NumericUpDown();
-            this.lblMA1 = new System.Windows.Forms.Label();
             this.lblMA2 = new System.Windows.Forms.Label();
             this.nudMA2 = new System.Windows.Forms.NumericUpDown();
+            this.lblMA1 = new System.Windows.Forms.Label();
+            this.nudMA1 = new System.Windows.Forms.NumericUpDown();
+            this.chkUpdateCandles = new System.Windows.Forms.CheckBox();
+            this.tmrCandleUpdater = new System.Windows.Forms.Timer(this.components);
             this.rdoBuy = new System.Windows.Forms.RadioButton();
             this.rdoSell = new System.Windows.Forms.RadioButton();
             this.rdoSwitch = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnAutomatedTrading = new System.Windows.Forms.Button();
-            this.nudAutoQuantity = new System.Windows.Forms.NumericUpDown();
             this.ddlAutoOrderType = new System.Windows.Forms.ComboBox();
+            this.nudAutoQuantity = new System.Windows.Forms.NumericUpDown();
+            this.btnAutomatedTrading = new System.Windows.Forms.Button();
             this.tmrAutoTradeExecution = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).BeginInit();
             this.gbCandles.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMA1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMA2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMA1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAutoQuantity)).BeginInit();
             this.SuspendLayout();
@@ -177,20 +177,20 @@
             this.dgvCandles.AllowUserToDeleteRows = false;
             this.dgvCandles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvCandles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCandles.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCandles.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgvCandles.Location = new System.Drawing.Point(6, 46);
             this.dgvCandles.Name = "dgvCandles";
             this.dgvCandles.ReadOnly = true;
             this.dgvCandles.RowHeadersVisible = false;
             this.dgvCandles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgvCandles.Size = new System.Drawing.Size(716, 173);
+            this.dgvCandles.Size = new System.Drawing.Size(1228, 173);
             this.dgvCandles.TabIndex = 8;
             // 
             // ddlCandleTimes
@@ -219,54 +219,10 @@
             this.gbCandles.Controls.Add(this.ddlCandleTimes);
             this.gbCandles.Location = new System.Drawing.Point(12, 87);
             this.gbCandles.Name = "gbCandles";
-            this.gbCandles.Size = new System.Drawing.Size(728, 225);
+            this.gbCandles.Size = new System.Drawing.Size(1240, 225);
             this.gbCandles.TabIndex = 10;
             this.gbCandles.TabStop = false;
             this.gbCandles.Text = "Candles";
-            // 
-            // tmrCandleUpdater
-            // 
-            this.tmrCandleUpdater.Interval = 10000;
-            this.tmrCandleUpdater.Tick += new System.EventHandler(this.tmrCandleUpdater_Tick);
-            // 
-            // chkUpdateCandles
-            // 
-            this.chkUpdateCandles.AutoSize = true;
-            this.chkUpdateCandles.Checked = true;
-            this.chkUpdateCandles.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUpdateCandles.Location = new System.Drawing.Point(58, 21);
-            this.chkUpdateCandles.Name = "chkUpdateCandles";
-            this.chkUpdateCandles.Size = new System.Drawing.Size(111, 17);
-            this.chkUpdateCandles.TabIndex = 12;
-            this.chkUpdateCandles.Text = "Update Every 10s";
-            this.chkUpdateCandles.UseVisualStyleBackColor = true;
-            this.chkUpdateCandles.CheckedChanged += new System.EventHandler(this.chkUpdateCandles_CheckedChanged);
-            // 
-            // nudMA1
-            // 
-            this.nudMA1.Location = new System.Drawing.Point(273, 18);
-            this.nudMA1.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nudMA1.Name = "nudMA1";
-            this.nudMA1.Size = new System.Drawing.Size(42, 20);
-            this.nudMA1.TabIndex = 13;
-            this.nudMA1.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            // 
-            // lblMA1
-            // 
-            this.lblMA1.AutoSize = true;
-            this.lblMA1.Location = new System.Drawing.Point(322, 21);
-            this.lblMA1.Name = "lblMA1";
-            this.lblMA1.Size = new System.Drawing.Size(29, 13);
-            this.lblMA1.TabIndex = 14;
-            this.lblMA1.Text = "MA1";
             // 
             // lblMA2
             // 
@@ -289,10 +245,54 @@
             this.nudMA2.Size = new System.Drawing.Size(42, 20);
             this.nudMA2.TabIndex = 15;
             this.nudMA2.Value = new decimal(new int[] {
-            5,
+            12,
             0,
             0,
             0});
+            // 
+            // lblMA1
+            // 
+            this.lblMA1.AutoSize = true;
+            this.lblMA1.Location = new System.Drawing.Point(322, 21);
+            this.lblMA1.Name = "lblMA1";
+            this.lblMA1.Size = new System.Drawing.Size(29, 13);
+            this.lblMA1.TabIndex = 14;
+            this.lblMA1.Text = "MA1";
+            // 
+            // nudMA1
+            // 
+            this.nudMA1.Location = new System.Drawing.Point(273, 18);
+            this.nudMA1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudMA1.Name = "nudMA1";
+            this.nudMA1.Size = new System.Drawing.Size(42, 20);
+            this.nudMA1.TabIndex = 13;
+            this.nudMA1.Value = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            // 
+            // chkUpdateCandles
+            // 
+            this.chkUpdateCandles.AutoSize = true;
+            this.chkUpdateCandles.Checked = true;
+            this.chkUpdateCandles.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUpdateCandles.Location = new System.Drawing.Point(58, 21);
+            this.chkUpdateCandles.Name = "chkUpdateCandles";
+            this.chkUpdateCandles.Size = new System.Drawing.Size(111, 17);
+            this.chkUpdateCandles.TabIndex = 12;
+            this.chkUpdateCandles.Text = "Update Every 10s";
+            this.chkUpdateCandles.UseVisualStyleBackColor = true;
+            this.chkUpdateCandles.CheckedChanged += new System.EventHandler(this.chkUpdateCandles_CheckedChanged);
+            // 
+            // tmrCandleUpdater
+            // 
+            this.tmrCandleUpdater.Interval = 10000;
+            this.tmrCandleUpdater.Tick += new System.EventHandler(this.tmrCandleUpdater_Tick);
             // 
             // rdoBuy
             // 
@@ -341,16 +341,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Automated Trading";
             // 
-            // btnAutomatedTrading
+            // ddlAutoOrderType
             // 
-            this.btnAutomatedTrading.BackColor = System.Drawing.Color.LightGreen;
-            this.btnAutomatedTrading.Location = new System.Drawing.Point(7, 20);
-            this.btnAutomatedTrading.Name = "btnAutomatedTrading";
-            this.btnAutomatedTrading.Size = new System.Drawing.Size(119, 43);
-            this.btnAutomatedTrading.TabIndex = 14;
-            this.btnAutomatedTrading.Text = "Start";
-            this.btnAutomatedTrading.UseVisualStyleBackColor = false;
-            this.btnAutomatedTrading.Click += new System.EventHandler(this.btnAutomatedTrading_Click);
+            this.ddlAutoOrderType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlAutoOrderType.FormattingEnabled = true;
+            this.ddlAutoOrderType.Items.AddRange(new object[] {
+            "Market",
+            "Limit Post Only"});
+            this.ddlAutoOrderType.Location = new System.Drawing.Point(235, 9);
+            this.ddlAutoOrderType.Name = "ddlAutoOrderType";
+            this.ddlAutoOrderType.Size = new System.Drawing.Size(98, 21);
+            this.ddlAutoOrderType.TabIndex = 15;
             // 
             // nudAutoQuantity
             // 
@@ -379,17 +380,16 @@
             0,
             0});
             // 
-            // ddlAutoOrderType
+            // btnAutomatedTrading
             // 
-            this.ddlAutoOrderType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddlAutoOrderType.FormattingEnabled = true;
-            this.ddlAutoOrderType.Items.AddRange(new object[] {
-            "Market",
-            "Limit Post Only"});
-            this.ddlAutoOrderType.Location = new System.Drawing.Point(235, 9);
-            this.ddlAutoOrderType.Name = "ddlAutoOrderType";
-            this.ddlAutoOrderType.Size = new System.Drawing.Size(98, 21);
-            this.ddlAutoOrderType.TabIndex = 15;
+            this.btnAutomatedTrading.BackColor = System.Drawing.Color.LightGreen;
+            this.btnAutomatedTrading.Location = new System.Drawing.Point(7, 20);
+            this.btnAutomatedTrading.Name = "btnAutomatedTrading";
+            this.btnAutomatedTrading.Size = new System.Drawing.Size(119, 43);
+            this.btnAutomatedTrading.TabIndex = 14;
+            this.btnAutomatedTrading.Text = "Start";
+            this.btnAutomatedTrading.UseVisualStyleBackColor = false;
+            this.btnAutomatedTrading.Click += new System.EventHandler(this.btnAutomatedTrading_Click);
             // 
             // tmrAutoTradeExecution
             // 
@@ -400,7 +400,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(752, 324);
+            this.ClientSize = new System.Drawing.Size(1264, 324);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbCandles);
             this.Controls.Add(this.ddlSymbol);
@@ -417,8 +417,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).EndInit();
             this.gbCandles.ResumeLayout(false);
             this.gbCandles.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMA1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMA2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMA1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAutoQuantity)).EndInit();

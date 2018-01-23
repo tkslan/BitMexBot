@@ -40,9 +40,14 @@ namespace BitMexSampleBot
         List<Position> OpenPositions = new List<Position>();
         List<Order> OpenOrders = new List<Order>();
 
-        // NEW - For BBand Indicator Info, 20, close 2
+        // For BBand Indicator Info, 20, close 2
         int BBLength = 20;
         double BBMultiplier = 2;
+
+        // NEW - For EMA Indicator Periods
+        int EMA1Period = 26;
+        int EMA2Period = 12;
+        int EMA3Period = 9;
 
         public Form1()
         {
@@ -195,7 +200,9 @@ namespace BitMexSampleBot
         private void UpdateCandles()
         {
             // Get candles
-            Candles = bitmex.GetCandleHistory(ActiveInstrument.Symbol, 100, ddlCandleTimes.SelectedItem.ToString());
+            Candles = bitmex.GetCandleHistory(ActiveInstrument.Symbol, 500, ddlCandleTimes.SelectedItem.ToString());
+
+            Candles = Candles.OrderBy(a => a.TimeStamp).ToList();
 
             // Set Indicator Info
             foreach (Candle c in Candles)
@@ -205,19 +212,19 @@ namespace BitMexSampleBot
                 int MA1Period = Convert.ToInt32(nudMA1.Value);
                 int MA2Period = Convert.ToInt32(nudMA2.Value);
 
-                if (c.PCC > MA1Period)
+                if (c.PCC >= MA1Period)
                 {
                     // Get the moving average over the last X periods using closing -- INCLUDES CURRENT CANDLE <=
                     c.MA1 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(MA1Period).Average(a => a.Close);
                 } // With not enough candles, we don't set to 0, we leave it null.
 
-                if (c.PCC > MA2Period)
+                if (c.PCC >= MA2Period)
                 {
                     // Get the moving average over the last X periods using closing -- INCLUDES CURRENT CANDLE <=
                     c.MA2 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(MA2Period).Average(a => a.Close);
                 } // With not enough candles, we don't set to 0, we leave it null.
 
-                if (c.PCC > BBLength) // New
+                if (c.PCC >= BBLength) // Bollinger Bands
                 {
                     // BBand calculation available on trading view wiki: https://www.tradingview.com/wiki/Bollinger_Bands_(BB)
                     // You might need to also google how to calculate standard deviation as well: https://stackoverflow.com/questions/14635735/how-to-efficiently-calculate-a-moving-standard-deviation
@@ -237,7 +244,63 @@ namespace BitMexSampleBot
                     c.BBLower = c.BBMiddle - (stdev * BBMultiplier);
                 }
 
+
+                // NEW - EMA
+                if (c.PCC >= EMA1Period)
+                {
+                    double p1 = EMA1Period + 1;
+                    double EMAMultiplier = Convert.ToDouble(2 / p1);
+
+                    if(c.PCC == EMA1Period)
+                    {
+                        // This is our seed EMA, using SMA of EMA1 Period for EMA 1
+                        c.EMA1 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(EMA1Period).Average(a => a.Close);
+                    }
+                    else
+                    {
+                        double? LastEMA = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().EMA1;
+                        c.EMA1 =((c.Close - LastEMA) * EMAMultiplier) + LastEMA;
+                    }
+                }
+
+
+                if (c.PCC >= EMA2Period)
+                {
+                    double p1 = EMA2Period + 1;
+                    double EMAMultiplier = Convert.ToDouble(2 / p1);
+
+                    if (c.PCC == EMA2Period)
+                    {
+                        // This is our seed EMA, using SMA
+                        c.EMA2 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(EMA2Period).Average(a => a.Close);
+                    }
+                    else
+                    {
+                        double? LastEMA = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().EMA2;
+                        c.EMA2 = ((c.Close - LastEMA) * EMAMultiplier) + LastEMA;
+                    }
+                }
+
+                if (c.PCC >= EMA3Period)
+                {
+                    double p1 = EMA3Period + 1;
+                    double EMAMultiplier = Convert.ToDouble(2 / p1);
+
+                    if (c.PCC == EMA3Period)
+                    {
+                        // This is our seed EMA, using SMA
+                        c.EMA3 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(EMA3Period).Average(a => a.Close);
+                    }
+                    else
+                    {
+                        double? LastEMA = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().EMA3;
+                        c.EMA3 = ((c.Close - LastEMA) * EMAMultiplier) + LastEMA;
+                    }
+                }
+
             }
+
+            Candles = Candles.OrderByDescending(a => a.TimeStamp).ToList();
 
             // Show Candles
             dgvCandles.DataSource = Candles;
