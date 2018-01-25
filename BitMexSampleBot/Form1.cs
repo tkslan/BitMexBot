@@ -44,10 +44,13 @@ namespace BitMexSampleBot
         int BBLength = 20;
         double BBMultiplier = 2;
 
-        // NEW - For EMA Indicator Periods
-        int EMA1Period = 26;
-        int EMA2Period = 12;
-        int EMA3Period = 9;
+        // For EMA Indicator Periods, also used in MACD
+        int EMA1Period = 26;  // Slow MACD EMA
+        int EMA2Period = 12;  // Fast MACD EMA
+        int EMA3Period = 9;   
+
+        // NEW - for MACD
+        int MACDEMAPeriod = 9;  // MACD smoothing period
 
         public Form1()
         {
@@ -245,7 +248,7 @@ namespace BitMexSampleBot
                 }
 
 
-                // NEW - EMA
+                // EMA
                 if (c.PCC >= EMA1Period)
                 {
                     double p1 = EMA1Period + 1;
@@ -262,7 +265,6 @@ namespace BitMexSampleBot
                         c.EMA1 =((c.Close - LastEMA) * EMAMultiplier) + LastEMA;
                     }
                 }
-
 
                 if (c.PCC >= EMA2Period)
                 {
@@ -296,6 +298,29 @@ namespace BitMexSampleBot
                         double? LastEMA = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().EMA3;
                         c.EMA3 = ((c.Close - LastEMA) * EMAMultiplier) + LastEMA;
                     }
+                }
+
+                // NEW MACD
+                // We can only do this if we have the longest EMA period, EMA1
+                if(c.PCC >= EMA1Period)
+                {
+
+                    double p1 = MACDEMAPeriod + 1;
+                    double MACDEMAMultiplier = Convert.ToDouble(2 / p1);
+
+                    c.MACDLine = (c.EMA2 - c.EMA1); // default is 12EMA - 26EMA
+                    if(c.PCC == EMA1Period + MACDEMAPeriod)
+                    {
+                        // Set this to SMA of MACDLine to seed it
+                        c.MACDSignalLine = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(MACDEMAPeriod).Average(a => (a.MACDLine));
+                    }
+                    else if (c.PCC > EMA1Period + MACDEMAPeriod)
+                    {
+                        // We can calculate this EMA based off past candle EMAs
+                        double? LastMACDSignalLine = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().MACDSignalLine;
+                        c.MACDSignalLine = ((c.MACDLine - LastMACDSignalLine) * MACDEMAMultiplier) + LastMACDSignalLine;
+                    }
+                    c.MACDHistorgram = c.MACDLine - c.MACDSignalLine;
                 }
 
             }
