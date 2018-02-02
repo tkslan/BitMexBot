@@ -55,6 +55,10 @@
             this.nudAutoQuantity = new System.Windows.Forms.NumericUpDown();
             this.btnAutomatedTrading = new System.Windows.Forms.Button();
             this.tmrAutoTradeExecution = new System.Windows.Forms.Timer(this.components);
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.stsAPIValid = new System.Windows.Forms.ToolStripStatusLabel();
+            this.stsAccountBalance = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnAccountBalance = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).BeginInit();
             this.gbCandles.SuspendLayout();
@@ -62,6 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudMA1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAutoQuantity)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnBuy
@@ -334,7 +339,7 @@
             this.groupBox1.Controls.Add(this.rdoSell);
             this.groupBox1.Controls.Add(this.rdoSwitch);
             this.groupBox1.Controls.Add(this.rdoBuy);
-            this.groupBox1.Location = new System.Drawing.Point(401, 12);
+            this.groupBox1.Location = new System.Drawing.Point(913, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(339, 69);
             this.groupBox1.TabIndex = 14;
@@ -396,11 +401,46 @@
             this.tmrAutoTradeExecution.Interval = 5000;
             this.tmrAutoTradeExecution.Tick += new System.EventHandler(this.tmrAutoTradeExecution_Tick);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stsAPIValid,
+            this.stsAccountBalance});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 315);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1264, 22);
+            this.statusStrip1.TabIndex = 15;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // stsAPIValid
+            // 
+            this.stsAPIValid.Name = "stsAPIValid";
+            this.stsAPIValid.Size = new System.Drawing.Size(108, 17);
+            this.stsAPIValid.Text = "API keys are invalid";
+            // 
+            // stsAccountBalance
+            // 
+            this.stsAccountBalance.Name = "stsAccountBalance";
+            this.stsAccountBalance.Size = new System.Drawing.Size(60, 17);
+            this.stsAccountBalance.Text = "Balance: 0";
+            // 
+            // btnAccountBalance
+            // 
+            this.btnAccountBalance.Location = new System.Drawing.Point(807, 52);
+            this.btnAccountBalance.Name = "btnAccountBalance";
+            this.btnAccountBalance.Size = new System.Drawing.Size(100, 23);
+            this.btnAccountBalance.TabIndex = 16;
+            this.btnAccountBalance.Text = "Update Balance";
+            this.btnAccountBalance.UseVisualStyleBackColor = true;
+            this.btnAccountBalance.Click += new System.EventHandler(this.btnAccountBalance_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 324);
+            this.ClientSize = new System.Drawing.Size(1264, 337);
+            this.Controls.Add(this.btnAccountBalance);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gbCandles);
             this.Controls.Add(this.ddlSymbol);
@@ -422,6 +462,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAutoQuantity)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -454,6 +496,10 @@
         private System.Windows.Forms.ComboBox ddlAutoOrderType;
         private System.Windows.Forms.NumericUpDown nudAutoQuantity;
         private System.Windows.Forms.Timer tmrAutoTradeExecution;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel stsAPIValid;
+        private System.Windows.Forms.ToolStripStatusLabel stsAccountBalance;
+        private System.Windows.Forms.Button btnAccountBalance;
     }
 }
 

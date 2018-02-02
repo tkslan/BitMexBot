@@ -278,6 +278,24 @@ namespace BitMEX
             return Query("PUT", "/order", param, true, true);
         }
 
+        // NEW - Getting Account Balance
+        public double GetAccountBalance()
+        {
+            var param = new Dictionary<string, string>();
+            param["currency"] = "XBt";
+            string res = Query("GET", "/user/margin", param, true);
+            if (res.Contains("error"))
+            {
+                return -1;
+            }
+            else
+            {
+                return Convert.ToDouble(JsonConvert.DeserializeObject<Margin>(res).UsefulBalance); // useful balance is the balance with full decimal places.
+                // default wallet balance doesn't show the decimal places like it should.
+            }
+
+        }
+
 
         #endregion
 
@@ -304,6 +322,16 @@ namespace BitMEX
     }
 
     // Working Classes
+    public class Margin // NEW - for account balance
+    {
+        public double? WalletBalance { get; set; }
+        public double? AvailableMargin { get; set; }
+        public double? UsefulBalance
+        {
+            get { return (WalletBalance / 100000000) ?? 0; }
+        }
+    }
+
     public class OrderBook
     {
         public string Side { get; set; }

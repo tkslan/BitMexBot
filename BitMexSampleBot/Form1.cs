@@ -17,17 +17,14 @@ namespace BitMexSampleBot
         // IMPORTANT - Enter your API Key information below
 
         //TEST NET
-        private static string TestbitmexKey = "YOURHEREKEYHERE";
-        private static string TestbitmexSecret = "YOURSECRETHERE";
-        private static string TestbitmexDomain = "https://testnet.bitmex.com";
+        //private static string TestbitmexKey = "YOURHEREKEYHERE";
+        //private static string TestbitmexSecret = "YOURSECRETHERE";
+        //private static string TestbitmexDomain = "https://testnet.bitmex.com";
 
-        //REAL NET
-        private static string bitmexKey = "YOURHEREKEYHERE";
-        private static string bitmexSecret = "YOURSECRETHERE";
-        private static string bitmexDomain = "https://www.bitmex.com";
-
-
-
+        ////REAL NET
+        //private static string bitmexKey = "YOURHEREKEYHERE";
+        //private static string bitmexSecret = "YOURSECRETHERE";
+        //private static string bitmexDomain = "https://www.bitmex.com";
 
         BitMEXApi bitmex;
         List<OrderBook> CurrentBook = new List<OrderBook>();
@@ -49,8 +46,12 @@ namespace BitMexSampleBot
         int EMA2Period = 12;  // Fast MACD EMA
         int EMA3Period = 9;   
 
-        // NEW - for MACD
+        // For MACD
         int MACDEMAPeriod = 9;  // MACD smoothing period
+
+        // NEW - For checking API validity before attempting orders/account specific moves
+        bool APIValid = false;
+        double WalletBalance = 0;
 
         public Form1()
         {
@@ -86,7 +87,9 @@ namespace BitMexSampleBot
             }
 
             // We must do this in case symbols are different on test and real net
+            GetAPIValidity(); // NEW - validate API keys by checking and displaying account balance.
             InitializeSymbolInformation();
+            
         }
 
         private void InitializeSymbolInformation()
@@ -354,7 +357,7 @@ namespace BitMexSampleBot
                     // Did the last full candle have MA1 cross below MA2?  We'll need to close any open position.
                     Mode = "CloseAndWait";
                 }
-                else if((Candles[1].MA1 > Candles[1].MA2) && (Candles[2].MA1 > Candles[2].MA2))
+                else if ((Candles[1].MA1 > Candles[1].MA2) && (Candles[2].MA1 > Candles[2].MA2))
                 {
                     // If no crossover, is MA1 still above MA2? We'll need to leave our position open.
                     Mode = "Wait";
@@ -364,6 +367,28 @@ namespace BitMexSampleBot
                     // If no crossover, is MA1 still below MA2? We'll need to make sure we don't have a position open.
                     Mode = "CloseAndWait";
                 }
+
+                // MACD Example
+                //if ((Candles[1].MACDLine > Candles[1].MACDSignalLine) && (Candles[2].MACDLine <= Candles[2].MACDSignalLine)) // Most recently closed candle crossed over up
+                //{
+                //    // Did the last full candle have MACDLine cross above MACDSignalLine?  We'll need to buy now.
+                //    Mode = "Buy";
+                //}
+                //else if ((Candles[1].MACDLine < Candles[1].MACDSignalLine) && (Candles[2].MACDLine >= Candles[2].MACDSignalLine))
+                //{
+                //    // Did the last full candle have MACDLine cross below MACDSignalLine?  We'll need to close any open position.
+                //    Mode = "CloseAndWait";
+                //}
+                //else if ((Candles[1].MACDLine > Candles[1].MACDSignalLine) && (Candles[2].MACDLine > Candles[2].MACDSignalLine))
+                //{
+                //    // If no crossover, is MACDLine still above MACDSignalLine? We'll need to leave our position open.
+                //    Mode = "Wait";
+                //}
+                //else if ((Candles[1].MACDLine < Candles[1].MACDSignalLine) && (Candles[2].MACDLine < Candles[2].MACDSignalLine))
+                //{
+                //    // If no crossover, is MACDLine still below MACDSignalLine? We'll need to make sure we don't have a position open.
+                //    Mode = "CloseAndWait";
+                //}
 
             }
             else if(rdoSell.Checked)
@@ -828,6 +853,40 @@ namespace BitMexSampleBot
                         break;
                 }
             }
+        }
+
+        // NEW - check account balance/validity
+        private void GetAPIValidity()
+        {
+            try // Code is simple, if we get our account balance without an error the API is valid, if not, it will throw an error and API will be marked not valid.
+            {
+                
+                WalletBalance = bitmex.GetAccountBalance();
+                if (WalletBalance >= 0)
+                {
+                    APIValid = true;
+                    stsAPIValid.Text = "API keys are valid";
+                    stsAccountBalance.Text = "Balance: " + WalletBalance.ToString();
+                }
+                else
+                {
+                    APIValid = false;
+                    stsAPIValid.Text = "API keys are invalid";
+                    stsAccountBalance.Text = "Balance: 0";
+                }
+            }
+            catch (Exception ex)
+            {
+                APIValid = false;
+                stsAPIValid.Text = "API keys are invalid";
+                stsAccountBalance.Text = "Balance: 0";
+            }
+        }
+
+        // NEW - update balances
+        private void btnAccountBalance_Click(object sender, EventArgs e)
+        {
+            GetAPIValidity();
         }
     }
 }
