@@ -49,7 +49,7 @@ namespace BitMexSampleBot
         // For MACD
         int MACDEMAPeriod = 9;  // MACD smoothing period
 
-        // NEW - For checking API validity before attempting orders/account specific moves
+        // For checking API validity before attempting orders/account specific moves
         bool APIValid = false;
         double WalletBalance = 0;
 
@@ -87,7 +87,7 @@ namespace BitMexSampleBot
             }
 
             // We must do this in case symbols are different on test and real net
-            GetAPIValidity(); // NEW - validate API keys by checking and displaying account balance.
+            GetAPIValidity(); // Validate API keys by checking and displaying account balance.
             InitializeSymbolInformation();
             
         }
@@ -303,7 +303,7 @@ namespace BitMexSampleBot
                     }
                 }
 
-                // NEW MACD
+                // MACD
                 // We can only do this if we have the longest EMA period, EMA1
                 if(c.PCC >= EMA1Period)
                 {
@@ -486,7 +486,7 @@ namespace BitMexSampleBot
                 Running = false;
                 rdoBuy.Enabled = true;
                 rdoSell.Enabled = true;
-                rdoSwitch.Enabled = true; // NEW
+                rdoSwitch.Enabled = true; 
             }
             
         }
@@ -855,7 +855,7 @@ namespace BitMexSampleBot
             }
         }
 
-        // NEW - check account balance/validity
+        // Check account balance/validity
         private void GetAPIValidity()
         {
             try // Code is simple, if we get our account balance without an error the API is valid, if not, it will throw an error and API will be marked not valid.
@@ -883,10 +883,41 @@ namespace BitMexSampleBot
             }
         }
 
-        // NEW - update balances
+        // Update balances
         private void btnAccountBalance_Click(object sender, EventArgs e)
         {
             GetAPIValidity();
+        }
+
+        // New - Set Market Stops
+        private void btnManualSetStop_Click(object sender, EventArgs e)
+        {
+            OpenPositions = bitmex.GetOpenPositions(ActiveInstrument.Symbol);
+
+            if(OpenPositions.Any()) // Only set stops if we have open positions
+            {
+                // Now determine what kind of stop to set
+                if(OpenPositions[0].CurrentQty > 0)
+                {
+                    // Determine stop price, x percent below current price.
+                    double PercentPriceDifference = Convert.ToDouble(Candles[0].Close) * (Convert.ToDouble(nudStopPercent.Value) / 100);
+                    double StopPrice = Convert.ToDouble(Candles[0].Close) - PercentPriceDifference;
+                    // Round the Stop Price down to the tick size so the price is valid
+                    StopPrice = StopPrice - (StopPrice % ActiveInstrument.TickSize);
+                    // Set a stop to sell
+                    bitmex.MarketStop(ActiveInstrument.Symbol, "Sell", StopPrice, Convert.ToInt32(OpenPositions[0].CurrentQty), true, ddlCandleTimes.SelectedItem.ToString());
+                }
+                else if(OpenPositions[0].CurrentQty < 0)
+                {
+                    // Determine stop price, x percent below current price.
+                    double PercentPriceDifference = Convert.ToDouble(Candles[0].Close) * (Convert.ToDouble(nudStopPercent.Value) / 100);
+                    double StopPrice = Convert.ToDouble(Candles[0].Close) + PercentPriceDifference;
+                    // Round the Stop Price down to the tick size so the price is valid
+                    StopPrice = StopPrice - (StopPrice % ActiveInstrument.TickSize);
+                    // Set a stop to sell
+                    bitmex.MarketStop(ActiveInstrument.Symbol, "Buy", StopPrice, (Convert.ToInt32(OpenPositions[0].CurrentQty) * -1), true, ddlCandleTimes.SelectedItem.ToString());
+                }
+            }
         }
     }
 }

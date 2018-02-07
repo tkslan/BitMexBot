@@ -59,6 +59,8 @@
             this.stsAPIValid = new System.Windows.Forms.ToolStripStatusLabel();
             this.stsAccountBalance = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnAccountBalance = new System.Windows.Forms.Button();
+            this.nudStopPercent = new System.Windows.Forms.NumericUpDown();
+            this.btnManualSetStop = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).BeginInit();
             this.gbCandles.SuspendLayout();
@@ -67,6 +69,7 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudAutoQuantity)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStopPercent)).BeginInit();
             this.SuspendLayout();
             // 
             // btnBuy
@@ -434,11 +437,41 @@
             this.btnAccountBalance.UseVisualStyleBackColor = true;
             this.btnAccountBalance.Click += new System.EventHandler(this.btnAccountBalance_Click);
             // 
+            // nudStopPercent
+            // 
+            this.nudStopPercent.DecimalPlaces = 2;
+            this.nudStopPercent.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.nudStopPercent.Location = new System.Drawing.Point(303, 35);
+            this.nudStopPercent.Name = "nudStopPercent";
+            this.nudStopPercent.Size = new System.Drawing.Size(60, 20);
+            this.nudStopPercent.TabIndex = 17;
+            this.nudStopPercent.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // btnManualSetStop
+            // 
+            this.btnManualSetStop.Location = new System.Drawing.Point(370, 34);
+            this.btnManualSetStop.Name = "btnManualSetStop";
+            this.btnManualSetStop.Size = new System.Drawing.Size(75, 23);
+            this.btnManualSetStop.TabIndex = 18;
+            this.btnManualSetStop.Text = "Set Stop";
+            this.btnManualSetStop.UseVisualStyleBackColor = true;
+            this.btnManualSetStop.Click += new System.EventHandler(this.btnManualSetStop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 337);
+            this.Controls.Add(this.btnManualSetStop);
+            this.Controls.Add(this.nudStopPercent);
             this.Controls.Add(this.btnAccountBalance);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox1);
@@ -464,6 +497,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudAutoQuantity)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudStopPercent)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -500,6 +534,8 @@
         private System.Windows.Forms.ToolStripStatusLabel stsAPIValid;
         private System.Windows.Forms.ToolStripStatusLabel stsAccountBalance;
         private System.Windows.Forms.Button btnAccountBalance;
+        private System.Windows.Forms.NumericUpDown nudStopPercent;
+        private System.Windows.Forms.Button btnManualSetStop;
     }
 }
 

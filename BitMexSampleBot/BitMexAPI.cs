@@ -278,7 +278,7 @@ namespace BitMEX
             return Query("PUT", "/order", param, true, true);
         }
 
-        // NEW - Getting Account Balance
+        // Getting Account Balance
         public double GetAccountBalance()
         {
             var param = new Dictionary<string, string>();
@@ -294,6 +294,27 @@ namespace BitMEX
                 // default wallet balance doesn't show the decimal places like it should.
             }
 
+        }
+
+        // NEW - Market Stops
+        public string MarketStop(string Symbol, string Side, double StopPrice, int Quantity, bool ReduceOnly, string timeframe, string text = "BMBStopMarket")
+        {
+            var param = new Dictionary<string, string>();
+            param["symbol"] = Symbol;
+            param["side"] = Side;
+            param["orderQty"] = Quantity.ToString();
+            param["stopPx"] = StopPrice.ToString();
+            param["ordType"] = "Stop";
+            param["text"] = text + timeframe;
+            if (ReduceOnly)
+            {
+                param["execInst"] = "ReduceOnly,LastPrice"; // Implies reduce position
+            }
+            else
+            {
+                param["execInst"] = "LastPrice";
+            }
+            return Query("POST", "/order", param, true);
         }
 
 
@@ -322,7 +343,7 @@ namespace BitMEX
     }
 
     // Working Classes
-    public class Margin // NEW - for account balance
+    public class Margin // For account balance
     {
         public double? WalletBalance { get; set; }
         public double? AvailableMargin { get; set; }
