@@ -17,14 +17,14 @@ namespace BitMexSampleBot
         // IMPORTANT - Enter your API Key information below
 
         //TEST NET
-        //private static string TestbitmexKey = "YOURHEREKEYHERE";
-        //private static string TestbitmexSecret = "YOURSECRETHERE";
-        //private static string TestbitmexDomain = "https://testnet.bitmex.com";
+        private static string TestbitmexKey = "YOURHEREKEYHERE";
+        private static string TestbitmexSecret = "YOURSECRETHERE";
+        private static string TestbitmexDomain = "https://testnet.bitmex.com";
 
-        ////REAL NET
-        //private static string bitmexKey = "YOURHEREKEYHERE";
-        //private static string bitmexSecret = "YOURSECRETHERE";
-        //private static string bitmexDomain = "https://www.bitmex.com";
+        //REAL NET
+        private static string bitmexKey = "YOURHEREKEYHERE";
+        private static string bitmexSecret = "YOURSECRETHERE";
+        private static string bitmexDomain = "https://www.bitmex.com";
 
         BitMEXApi bitmex;
         List<OrderBook> CurrentBook = new List<OrderBook>();
@@ -312,12 +312,12 @@ namespace BitMexSampleBot
                     double MACDEMAMultiplier = Convert.ToDouble(2 / p1);
 
                     c.MACDLine = (c.EMA2 - c.EMA1); // default is 12EMA - 26EMA
-                    if(c.PCC == EMA1Period + MACDEMAPeriod)
+                    if(c.PCC == EMA1Period + MACDEMAPeriod - 1)
                     {
                         // Set this to SMA of MACDLine to seed it
                         c.MACDSignalLine = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(MACDEMAPeriod).Average(a => (a.MACDLine));
                     }
-                    else if (c.PCC > EMA1Period + MACDEMAPeriod)
+                    else if (c.PCC > EMA1Period + MACDEMAPeriod - 1)
                     {
                         // We can calculate this EMA based off past candle EMAs
                         double? LastMACDSignalLine = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().MACDSignalLine;
@@ -495,6 +495,33 @@ namespace BitMexSampleBot
         {
             OpenPositions = bitmex.GetOpenPositions(ActiveInstrument.Symbol);
             OpenOrders = bitmex.GetOpenOrders(ActiveInstrument.Symbol);
+
+            if(chkAutoMarketTakeProfits.Checked && OpenPositions.Any() && Mode != "Sell" && Mode != "Buy") // NEW - See if we are taking profits on open positions, and have positions open and we aren't in our buy or sell periods
+            {
+                lblAutoUnrealizedROEPercent.Text = Math.Round((Convert.ToDouble(OpenPositions[0].UnrealisedRoePcnt * 100)), 2).ToString();
+                // Did we meet our profit threshold yet?
+                if (Convert.ToDouble(OpenPositions[0].UnrealisedRoePcnt * 100) >= Convert.ToDouble(nudAutoMarketTakeProfitPercent.Value))
+                {
+                    // Make a market order to close out the position, also cancel all orders so nothing else fills if we had unfilled limit orders still open.
+                    string Side = "Sell";
+                    int Quantity = 0;
+                    if(OpenPositions[0].CurrentQty > 0)
+                    {
+                        Side = "Sell";
+                        Quantity = Convert.ToInt32(OpenPositions[0].CurrentQty);
+                    }
+                    else if (OpenPositions[0].CurrentQty < 0)
+                    {
+                        Side = "Buy";
+                        Quantity = Convert.ToInt32(OpenPositions[0].CurrentQty) * -1;
+                    }
+                    bitmex.MarketOrder(ActiveInstrument.Symbol, Side, Quantity);
+
+                    // Get our positions and orders again to be able to process rest of logic with new information.
+                    OpenPositions = bitmex.GetOpenPositions(ActiveInstrument.Symbol);
+                    OpenOrders = bitmex.GetOpenOrders(ActiveInstrument.Symbol);
+                }
+            }
             
             if(rdoBuy.Checked)
             {
@@ -889,7 +916,7 @@ namespace BitMexSampleBot
             GetAPIValidity();
         }
 
-        // New - Set Market Stops
+        // Set Market Stops
         private void btnManualSetStop_Click(object sender, EventArgs e)
         {
             OpenPositions = bitmex.GetOpenPositions(ActiveInstrument.Symbol);
@@ -919,5 +946,6 @@ namespace BitMexSampleBot
                 }
             }
         }
+
     }
 }

@@ -296,7 +296,7 @@ namespace BitMEX
 
         }
 
-        // NEW - Market Stops
+        // Market Stops
         public string MarketStop(string Symbol, string Side, double StopPrice, int Quantity, bool ReduceOnly, string timeframe, string text = "BMBStopMarket")
         {
             var param = new Dictionary<string, string>();
@@ -401,6 +401,7 @@ namespace BitMEX
         public double? MarkValue { get; set; }
         public double? UnrealisedPnl { get; set; }
         public double? UnrealisedPnlPcnt { get; set; }
+        public double? UnrealisedRoePcnt { get; set; }
         public double? AvgEntryPrice { get; set; }
         public double? BreakEvenPrice { get; set; }
         public double? LiquidationPrice { get; set; }
