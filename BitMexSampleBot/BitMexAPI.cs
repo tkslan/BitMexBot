@@ -388,6 +388,23 @@ namespace BitMEX
         public double? MACDLine { get; set; }
         public double? MACDSignalLine { get; set; }
         public double? MACDHistorgram { get; set; }
+        // NEW - For TR and ATR
+        public double? TR { get; set; }
+        public double? ATR1 { get; set; }
+        public double? ATR2 { get; set; }
+
+
+
+        public void SetTR(double? PreviousClose)
+        {
+            List<double?> TRs = new List<double?>();
+
+            TRs.Add(High - Low);
+            TRs.Add(Convert.ToDouble(Math.Abs(Convert.ToDecimal(High - PreviousClose))));
+            TRs.Add(Convert.ToDouble(Math.Abs(Convert.ToDecimal(Low - PreviousClose))));
+
+            TR = TRs.Max();
+        }
     }
 
     public class Position

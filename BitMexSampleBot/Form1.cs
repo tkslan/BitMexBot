@@ -26,6 +26,7 @@ namespace BitMexSampleBot
         private static string bitmexSecret = "YOURSECRETHERE";
         private static string bitmexDomain = "https://www.bitmex.com";
 
+
         BitMEXApi bitmex;
         List<OrderBook> CurrentBook = new List<OrderBook>();
         List<Instrument> ActiveInstruments = new List<Instrument>();
@@ -52,6 +53,10 @@ namespace BitMexSampleBot
         // For checking API validity before attempting orders/account specific moves
         bool APIValid = false;
         double WalletBalance = 0;
+
+        // NEW - For ATR
+        int ATR1Period = 7;
+        int ATR2Period = 20;
 
         public Form1()
         {
@@ -326,6 +331,41 @@ namespace BitMexSampleBot
                     c.MACDHistorgram = c.MACDLine - c.MACDSignalLine;
                 }
 
+                // NEW - ATR, setting TR
+                if(c.PCC == 0)
+                {
+                    c.SetTR(c.High);
+                }
+                else if(c.PCC > 0)
+                {
+                    c.SetTR(Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().Close);
+                }
+
+                // NEW - Setting ATRs
+                if(c.PCC == ATR1Period - 1)
+                {
+                    c.ATR1 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(ATR1Period).Average(a => a.TR);
+                }
+                else if(c.PCC > ATR1Period - 1)
+                {
+                    double p1 = ATR1Period + 1;
+                    double ATR1Multiplier = Convert.ToDouble(2 / p1);
+                    double? LastATR1 = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().ATR1;
+                    c.ATR1 = ((c.TR - LastATR1) * ATR1Multiplier) + LastATR1;
+                }
+
+                if (c.PCC == ATR2Period - 1)
+                {
+                    c.ATR2 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(ATR2Period).Average(a => a.TR);
+                }
+                else if (c.PCC > ATR2Period - 1)
+                {
+                    double p1 = ATR2Period + 1;
+                    double ATR2Multiplier = Convert.ToDouble(2 / p1);
+                    double? LastATR2 = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().ATR2;
+                    c.ATR2 = ((c.TR - LastATR2) * ATR2Multiplier) + LastATR2;
+                }
+
             }
 
             Candles = Candles.OrderByDescending(a => a.TimeStamp).ToList();
@@ -347,48 +387,48 @@ namespace BitMexSampleBot
             // This is where we are going to determine what mode the bot is in
             if(rdoBuy.Checked)
             {
-                if ((Candles[1].MA1 > Candles[1].MA2) && (Candles[2].MA1 <= Candles[2].MA2)) // Most recently closed candle crossed over up
-                {
-                    // Did the last full candle have MA1 cross above MA2?  We'll need to buy now.
-                    Mode = "Buy";
-                }
-                else if ((Candles[1].MA1 < Candles[1].MA2) && (Candles[2].MA1 >= Candles[2].MA2))
-                {
-                    // Did the last full candle have MA1 cross below MA2?  We'll need to close any open position.
-                    Mode = "CloseAndWait";
-                }
-                else if ((Candles[1].MA1 > Candles[1].MA2) && (Candles[2].MA1 > Candles[2].MA2))
-                {
-                    // If no crossover, is MA1 still above MA2? We'll need to leave our position open.
-                    Mode = "Wait";
-                }
-                else if ((Candles[1].MA1 < Candles[1].MA2) && (Candles[2].MA1 < Candles[2].MA2))
-                {
-                    // If no crossover, is MA1 still below MA2? We'll need to make sure we don't have a position open.
-                    Mode = "CloseAndWait";
-                }
-
-                // MACD Example
-                //if ((Candles[1].MACDLine > Candles[1].MACDSignalLine) && (Candles[2].MACDLine <= Candles[2].MACDSignalLine)) // Most recently closed candle crossed over up
+                //if ((Candles[1].MA1 > Candles[1].MA2) && (Candles[2].MA1 <= Candles[2].MA2)) // Most recently closed candle crossed over up
                 //{
-                //    // Did the last full candle have MACDLine cross above MACDSignalLine?  We'll need to buy now.
+                //    // Did the last full candle have MA1 cross above MA2?  We'll need to buy now.
                 //    Mode = "Buy";
                 //}
-                //else if ((Candles[1].MACDLine < Candles[1].MACDSignalLine) && (Candles[2].MACDLine >= Candles[2].MACDSignalLine))
+                //else if ((Candles[1].MA1 < Candles[1].MA2) && (Candles[2].MA1 >= Candles[2].MA2))
                 //{
-                //    // Did the last full candle have MACDLine cross below MACDSignalLine?  We'll need to close any open position.
+                //    // Did the last full candle have MA1 cross below MA2?  We'll need to close any open position.
                 //    Mode = "CloseAndWait";
                 //}
-                //else if ((Candles[1].MACDLine > Candles[1].MACDSignalLine) && (Candles[2].MACDLine > Candles[2].MACDSignalLine))
+                //else if ((Candles[1].MA1 > Candles[1].MA2) && (Candles[2].MA1 > Candles[2].MA2))
                 //{
-                //    // If no crossover, is MACDLine still above MACDSignalLine? We'll need to leave our position open.
+                //    // If no crossover, is MA1 still above MA2? We'll need to leave our position open.
                 //    Mode = "Wait";
                 //}
-                //else if ((Candles[1].MACDLine < Candles[1].MACDSignalLine) && (Candles[2].MACDLine < Candles[2].MACDSignalLine))
+                //else if ((Candles[1].MA1 < Candles[1].MA2) && (Candles[2].MA1 < Candles[2].MA2))
                 //{
-                //    // If no crossover, is MACDLine still below MACDSignalLine? We'll need to make sure we don't have a position open.
+                //    // If no crossover, is MA1 still below MA2? We'll need to make sure we don't have a position open.
                 //    Mode = "CloseAndWait";
                 //}
+
+                // MACD Example
+                if ((Candles[1].MACDLine > Candles[1].MACDSignalLine) && (Candles[2].MACDLine <= Candles[2].MACDSignalLine)) // Most recently closed candle crossed over up
+                {
+                    // Did the last full candle have MACDLine cross above MACDSignalLine?  We'll need to buy now.
+                    Mode = "Buy";
+                }
+                else if ((Candles[1].MACDLine < Candles[1].MACDSignalLine) && (Candles[2].MACDLine >= Candles[2].MACDSignalLine))
+                {
+                    // Did the last full candle have MACDLine cross below MACDSignalLine?  We'll need to close any open position.
+                    Mode = "CloseAndWait";
+                }
+                else if ((Candles[1].MACDLine > Candles[1].MACDSignalLine) && (Candles[2].MACDLine > Candles[2].MACDSignalLine))
+                {
+                    // If no crossover, is MACDLine still above MACDSignalLine? We'll need to leave our position open.
+                    Mode = "Wait";
+                }
+                else if ((Candles[1].MACDLine < Candles[1].MACDSignalLine) && (Candles[2].MACDLine < Candles[2].MACDSignalLine))
+                {
+                    // If no crossover, is MACDLine still below MACDSignalLine? We'll need to make sure we don't have a position open.
+                    Mode = "CloseAndWait";
+                }
 
             }
             else if(rdoSell.Checked)
@@ -496,7 +536,7 @@ namespace BitMexSampleBot
             OpenPositions = bitmex.GetOpenPositions(ActiveInstrument.Symbol);
             OpenOrders = bitmex.GetOpenOrders(ActiveInstrument.Symbol);
 
-            if(chkAutoMarketTakeProfits.Checked && OpenPositions.Any() && Mode != "Sell" && Mode != "Buy") // NEW - See if we are taking profits on open positions, and have positions open and we aren't in our buy or sell periods
+            if(chkAutoMarketTakeProfits.Checked && OpenPositions.Any() && Mode != "Sell" && Mode != "Buy") // See if we are taking profits on open positions, and have positions open and we aren't in our buy or sell periods
             {
                 lblAutoUnrealizedROEPercent.Text = Math.Round((Convert.ToDouble(OpenPositions[0].UnrealisedRoePcnt * 100)), 2).ToString();
                 // Did we meet our profit threshold yet?
