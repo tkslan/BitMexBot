@@ -16,14 +16,14 @@ namespace BitMexSampleBot
 
         // IMPORTANT - Enter your API Key information below
 
-        //TEST NET
-        private static string TestbitmexKey = "YOURHEREKEYHERE";
-        private static string TestbitmexSecret = "YOURSECRETHERE";
+        //TEST NET - NEW
+        //private static string TestbitmexKey = "YOURHEREKEYHERE";
+        //private static string TestbitmexSecret = "YOURSECRETHERE";
         private static string TestbitmexDomain = "https://testnet.bitmex.com";
 
         //REAL NET
-        private static string bitmexKey = "YOURHEREKEYHERE";
-        private static string bitmexSecret = "YOURSECRETHERE";
+        //private static string bitmexKey = "YOURHEREKEYHERE";
+        //private static string bitmexSecret = "YOURSECRETHERE";
         private static string bitmexDomain = "https://www.bitmex.com";
 
 
@@ -61,17 +61,35 @@ namespace BitMexSampleBot
         public Form1()
         {
             InitializeComponent();
-            InitializeDropdowns();
+            InitializeDropdownsAndSettings();
             InitializeAPI();
             InitializeCandleArea();
 
         }
-        private void InitializeDropdowns()
+        private void InitializeDropdownsAndSettings()
         {
             ddlNetwork.SelectedIndex = 0;
             ddlOrderType.SelectedIndex = 0;
             ddlCandleTimes.SelectedIndex = 0;
             ddlAutoOrderType.SelectedIndex = 0;
+
+            LoadAPISettings();
+        }
+
+        private void LoadAPISettings()
+        {
+            // NEW
+            switch (ddlNetwork.SelectedItem.ToString())
+            {
+                case "TestNet":
+                    txtAPIKey.Text = Properties.Settings.Default.TestAPIKey;
+                    txtAPISecret.Text = Properties.Settings.Default.TestAPISecret;
+                    break;
+                case "RealNet":
+                    txtAPIKey.Text = Properties.Settings.Default.APIKey;
+                    txtAPISecret.Text = Properties.Settings.Default.APISecret;
+                    break;
+            }
         }
 
         private void InitializeCandleArea()
@@ -81,13 +99,14 @@ namespace BitMexSampleBot
 
         private void InitializeAPI()
         {
+            // NEW
             switch(ddlNetwork.SelectedItem.ToString())
             {
                 case "TestNet":
-                    bitmex = new BitMEXApi(TestbitmexKey, TestbitmexSecret, TestbitmexDomain);
+                    bitmex = new BitMEXApi(txtAPIKey.Text, txtAPISecret.Text, TestbitmexDomain);
                     break;
                 case "RealNet":
-                    bitmex = new BitMEXApi(bitmexKey, bitmexSecret, bitmexDomain);
+                    bitmex = new BitMEXApi(txtAPIKey.Text, txtAPISecret.Text, bitmexDomain);
                     break;
             }
 
@@ -200,6 +219,7 @@ namespace BitMexSampleBot
 
         private void ddlNetwork_SelectedIndexChanged(object sender, EventArgs e)
         {
+            LoadAPISettings();
             InitializeAPI();
         }
 
@@ -987,5 +1007,42 @@ namespace BitMexSampleBot
             }
         }
 
+        // NEW
+        private void txtAPIKey_TextChanged(object sender, EventArgs e)
+        {
+            switch (ddlNetwork.SelectedItem.ToString())
+            {
+                case "TestNet":
+                    Properties.Settings.Default.TestAPIKey = txtAPIKey.Text;
+                    break;
+                case "RealNet":
+                    Properties.Settings.Default.APIKey = txtAPIKey.Text;
+                    break;
+            }
+            SaveSettings();
+            InitializeAPI();
+        }
+
+        private void txtAPISecret_TextChanged(object sender, EventArgs e)
+        {
+            switch (ddlNetwork.SelectedItem.ToString())
+            {
+                case "TestNet":
+                    Properties.Settings.Default.TestAPISecret = txtAPISecret.Text;
+                    break;
+                case "RealNet":
+                    Properties.Settings.Default.APISecret = txtAPISecret.Text;
+                    break;
+            }
+            SaveSettings();
+            InitializeAPI();
+        }
+
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.Save();
+        }
+
+        
     }
 }

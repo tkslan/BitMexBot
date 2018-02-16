@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnBuy = new System.Windows.Forms.Button();
             this.btnSell = new System.Windows.Forms.Button();
             this.nudQty = new System.Windows.Forms.NumericUpDown();
@@ -51,6 +51,7 @@
             this.rdoSell = new System.Windows.Forms.RadioButton();
             this.rdoSwitch = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblAutoUnrealizedROEPercent = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.nudAutoMarketTakeProfitPercent = new System.Windows.Forms.NumericUpDown();
             this.chkAutoMarketTakeProfits = new System.Windows.Forms.CheckBox();
@@ -64,7 +65,10 @@
             this.btnAccountBalance = new System.Windows.Forms.Button();
             this.nudStopPercent = new System.Windows.Forms.NumericUpDown();
             this.btnManualSetStop = new System.Windows.Forms.Button();
-            this.lblAutoUnrealizedROEPercent = new System.Windows.Forms.Label();
+            this.txtAPIKey = new System.Windows.Forms.TextBox();
+            this.txtAPISecret = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).BeginInit();
             this.gbCandles.SuspendLayout();
@@ -190,14 +194,14 @@
             this.dgvCandles.AllowUserToDeleteRows = false;
             this.dgvCandles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvCandles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCandles.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCandles.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvCandles.Location = new System.Drawing.Point(6, 46);
             this.dgvCandles.Name = "dgvCandles";
             this.dgvCandles.ReadOnly = true;
@@ -358,6 +362,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Automated Trading";
             // 
+            // lblAutoUnrealizedROEPercent
+            // 
+            this.lblAutoUnrealizedROEPercent.AutoSize = true;
+            this.lblAutoUnrealizedROEPercent.Location = new System.Drawing.Point(201, 91);
+            this.lblAutoUnrealizedROEPercent.Name = "lblAutoUnrealizedROEPercent";
+            this.lblAutoUnrealizedROEPercent.Size = new System.Drawing.Size(0, 13);
+            this.lblAutoUnrealizedROEPercent.TabIndex = 21;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -482,7 +494,7 @@
             // 
             // btnAccountBalance
             // 
-            this.btnAccountBalance.Location = new System.Drawing.Point(807, 52);
+            this.btnAccountBalance.Location = new System.Drawing.Point(807, 88);
             this.btnAccountBalance.Name = "btnAccountBalance";
             this.btnAccountBalance.Size = new System.Drawing.Size(100, 23);
             this.btnAccountBalance.TabIndex = 16;
@@ -518,19 +530,51 @@
             this.btnManualSetStop.UseVisualStyleBackColor = true;
             this.btnManualSetStop.Click += new System.EventHandler(this.btnManualSetStop_Click);
             // 
-            // lblAutoUnrealizedROEPercent
+            // txtAPIKey
             // 
-            this.lblAutoUnrealizedROEPercent.AutoSize = true;
-            this.lblAutoUnrealizedROEPercent.Location = new System.Drawing.Point(201, 91);
-            this.lblAutoUnrealizedROEPercent.Name = "lblAutoUnrealizedROEPercent";
-            this.lblAutoUnrealizedROEPercent.Size = new System.Drawing.Size(0, 13);
-            this.lblAutoUnrealizedROEPercent.TabIndex = 21;
+            this.txtAPIKey.Location = new System.Drawing.Point(743, 36);
+            this.txtAPIKey.Name = "txtAPIKey";
+            this.txtAPIKey.Size = new System.Drawing.Size(164, 20);
+            this.txtAPIKey.TabIndex = 19;
+            this.txtAPIKey.UseSystemPasswordChar = true;
+            this.txtAPIKey.TextChanged += new System.EventHandler(this.txtAPIKey_TextChanged);
+            // 
+            // txtAPISecret
+            // 
+            this.txtAPISecret.Location = new System.Drawing.Point(743, 62);
+            this.txtAPISecret.Name = "txtAPISecret";
+            this.txtAPISecret.Size = new System.Drawing.Size(164, 20);
+            this.txtAPISecret.TabIndex = 20;
+            this.txtAPISecret.UseSystemPasswordChar = true;
+            this.txtAPISecret.TextChanged += new System.EventHandler(this.txtAPISecret_TextChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(712, 38);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(25, 13);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "Key";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(699, 66);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(38, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "Secret";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 395);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.txtAPISecret);
+            this.Controls.Add(this.txtAPIKey);
             this.Controls.Add(this.btnManualSetStop);
             this.Controls.Add(this.nudStopPercent);
             this.Controls.Add(this.btnAccountBalance);
@@ -602,6 +646,10 @@
         private System.Windows.Forms.NumericUpDown nudAutoMarketTakeProfitPercent;
         private System.Windows.Forms.CheckBox chkAutoMarketTakeProfits;
         private System.Windows.Forms.Label lblAutoUnrealizedROEPercent;
+        private System.Windows.Forms.TextBox txtAPIKey;
+        private System.Windows.Forms.TextBox txtAPISecret;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
 
