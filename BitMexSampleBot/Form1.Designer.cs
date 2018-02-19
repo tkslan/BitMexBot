@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnBuy = new System.Windows.Forms.Button();
             this.btnSell = new System.Windows.Forms.Button();
             this.nudQty = new System.Windows.Forms.NumericUpDown();
@@ -69,6 +69,18 @@
             this.txtAPISecret = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnBuyOverTimeOrder = new System.Windows.Forms.Button();
+            this.btnSellOverTimeOrder = new System.Windows.Forms.Button();
+            this.tmrTradeOverTime = new System.Windows.Forms.Timer(this.components);
+            this.nudOverTimeContracts = new System.Windows.Forms.NumericUpDown();
+            this.nudOverTimeInterval = new System.Windows.Forms.NumericUpDown();
+            this.nudOverTimeIntervalCount = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lblOverTimeSummary = new System.Windows.Forms.Label();
+            this.stsOTProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.btnOverTimeStop = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).BeginInit();
             this.gbCandles.SuspendLayout();
@@ -79,6 +91,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudAutoQuantity)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudStopPercent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudOverTimeContracts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudOverTimeInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudOverTimeIntervalCount)).BeginInit();
             this.SuspendLayout();
             // 
             // btnBuy
@@ -194,14 +209,14 @@
             this.dgvCandles.AllowUserToDeleteRows = false;
             this.dgvCandles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvCandles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCandles.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCandles.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvCandles.Location = new System.Drawing.Point(6, 46);
             this.dgvCandles.Name = "dgvCandles";
             this.dgvCandles.ReadOnly = true;
@@ -473,7 +488,8 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stsAPIValid,
-            this.stsAccountBalance});
+            this.stsAccountBalance,
+            this.stsOTProgress});
             this.statusStrip1.Location = new System.Drawing.Point(0, 373);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1264, 22);
@@ -566,11 +582,166 @@
             this.label3.TabIndex = 23;
             this.label3.Text = "Secret";
             // 
+            // btnBuyOverTimeOrder
+            // 
+            this.btnBuyOverTimeOrder.Location = new System.Drawing.Point(349, 5);
+            this.btnBuyOverTimeOrder.Name = "btnBuyOverTimeOrder";
+            this.btnBuyOverTimeOrder.Size = new System.Drawing.Size(86, 23);
+            this.btnBuyOverTimeOrder.TabIndex = 24;
+            this.btnBuyOverTimeOrder.Text = "Buy Over Time";
+            this.btnBuyOverTimeOrder.UseVisualStyleBackColor = true;
+            this.btnBuyOverTimeOrder.Click += new System.EventHandler(this.btnBuyOverTimeOrder_Click);
+            // 
+            // btnSellOverTimeOrder
+            // 
+            this.btnSellOverTimeOrder.Location = new System.Drawing.Point(441, 5);
+            this.btnSellOverTimeOrder.Name = "btnSellOverTimeOrder";
+            this.btnSellOverTimeOrder.Size = new System.Drawing.Size(89, 23);
+            this.btnSellOverTimeOrder.TabIndex = 25;
+            this.btnSellOverTimeOrder.Text = "Sell Over Time";
+            this.btnSellOverTimeOrder.UseVisualStyleBackColor = true;
+            this.btnSellOverTimeOrder.Click += new System.EventHandler(this.btnSellOverTimeOrder_Click);
+            // 
+            // tmrTradeOverTime
+            // 
+            this.tmrTradeOverTime.Tick += new System.EventHandler(this.tmrTradeOverTime_Tick);
+            // 
+            // nudOverTimeContracts
+            // 
+            this.nudOverTimeContracts.Location = new System.Drawing.Point(349, 55);
+            this.nudOverTimeContracts.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.nudOverTimeContracts.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudOverTimeContracts.Name = "nudOverTimeContracts";
+            this.nudOverTimeContracts.Size = new System.Drawing.Size(67, 20);
+            this.nudOverTimeContracts.TabIndex = 26;
+            this.nudOverTimeContracts.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nudOverTimeContracts.ValueChanged += new System.EventHandler(this.nudOverTimeContracts_ValueChanged);
+            // 
+            // nudOverTimeInterval
+            // 
+            this.nudOverTimeInterval.Location = new System.Drawing.Point(433, 55);
+            this.nudOverTimeInterval.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.nudOverTimeInterval.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudOverTimeInterval.Name = "nudOverTimeInterval";
+            this.nudOverTimeInterval.Size = new System.Drawing.Size(47, 20);
+            this.nudOverTimeInterval.TabIndex = 27;
+            this.nudOverTimeInterval.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nudOverTimeInterval.ValueChanged += new System.EventHandler(this.nudOverTimeInterval_ValueChanged);
+            // 
+            // nudOverTimeIntervalCount
+            // 
+            this.nudOverTimeIntervalCount.Location = new System.Drawing.Point(496, 55);
+            this.nudOverTimeIntervalCount.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.nudOverTimeIntervalCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudOverTimeIntervalCount.Name = "nudOverTimeIntervalCount";
+            this.nudOverTimeIntervalCount.Size = new System.Drawing.Size(47, 20);
+            this.nudOverTimeIntervalCount.TabIndex = 28;
+            this.nudOverTimeIntervalCount.Value = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.nudOverTimeIntervalCount.ValueChanged += new System.EventHandler(this.nudOverTimeIntervalCount_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(346, 39);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(71, 13);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "Contracts Per";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(431, 39);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(49, 13);
+            this.label5.TabIndex = 29;
+            this.label5.Text = "Seconds";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(498, 39);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(45, 13);
+            this.label6.TabIndex = 30;
+            this.label6.Text = "X Times";
+            // 
+            // lblOverTimeSummary
+            // 
+            this.lblOverTimeSummary.AutoSize = true;
+            this.lblOverTimeSummary.Location = new System.Drawing.Point(346, 84);
+            this.lblOverTimeSummary.Name = "lblOverTimeSummary";
+            this.lblOverTimeSummary.Size = new System.Drawing.Size(102, 13);
+            this.lblOverTimeSummary.TabIndex = 22;
+            this.lblOverTimeSummary.Text = "Over Time Summary";
+            // 
+            // stsOTProgress
+            // 
+            this.stsOTProgress.Name = "stsOTProgress";
+            this.stsOTProgress.Size = new System.Drawing.Size(100, 16);
+            this.stsOTProgress.Visible = false;
+            // 
+            // btnOverTimeStop
+            // 
+            this.btnOverTimeStop.Location = new System.Drawing.Point(536, 5);
+            this.btnOverTimeStop.Name = "btnOverTimeStop";
+            this.btnOverTimeStop.Size = new System.Drawing.Size(41, 23);
+            this.btnOverTimeStop.TabIndex = 31;
+            this.btnOverTimeStop.Text = "Stop";
+            this.btnOverTimeStop.UseVisualStyleBackColor = true;
+            this.btnOverTimeStop.Click += new System.EventHandler(this.btnOverTimeStop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 395);
+            this.Controls.Add(this.btnOverTimeStop);
+            this.Controls.Add(this.lblOverTimeSummary);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.nudOverTimeIntervalCount);
+            this.Controls.Add(this.nudOverTimeInterval);
+            this.Controls.Add(this.nudOverTimeContracts);
+            this.Controls.Add(this.btnSellOverTimeOrder);
+            this.Controls.Add(this.btnBuyOverTimeOrder);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtAPISecret);
@@ -604,6 +775,9 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudStopPercent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudOverTimeContracts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudOverTimeInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudOverTimeIntervalCount)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -650,6 +824,18 @@
         private System.Windows.Forms.TextBox txtAPISecret;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnBuyOverTimeOrder;
+        private System.Windows.Forms.Button btnSellOverTimeOrder;
+        private System.Windows.Forms.Timer tmrTradeOverTime;
+        private System.Windows.Forms.NumericUpDown nudOverTimeContracts;
+        private System.Windows.Forms.NumericUpDown nudOverTimeInterval;
+        private System.Windows.Forms.NumericUpDown nudOverTimeIntervalCount;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblOverTimeSummary;
+        private System.Windows.Forms.ToolStripProgressBar stsOTProgress;
+        private System.Windows.Forms.Button btnOverTimeStop;
     }
 }
 

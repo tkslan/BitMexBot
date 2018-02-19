@@ -54,9 +54,16 @@ namespace BitMexSampleBot
         bool APIValid = false;
         double WalletBalance = 0;
 
-        // NEW - For ATR
+        // For ATR
         int ATR1Period = 7;
         int ATR2Period = 20;
+
+        // NEW - For Over Time
+        int OTContractsPer = 0;
+        int OTIntervalSeconds = 0;
+        int OTIntervalCount = 0;
+        int OTTimerCount = 0;
+        string OTSide = "Buy";
 
         public Form1()
         {
@@ -64,6 +71,7 @@ namespace BitMexSampleBot
             InitializeDropdownsAndSettings();
             InitializeAPI();
             InitializeCandleArea();
+            InitializeOverTime();
 
         }
         private void InitializeDropdownsAndSettings()
@@ -78,7 +86,6 @@ namespace BitMexSampleBot
 
         private void LoadAPISettings()
         {
-            // NEW
             switch (ddlNetwork.SelectedItem.ToString())
             {
                 case "TestNet":
@@ -92,6 +99,11 @@ namespace BitMexSampleBot
             }
         }
 
+        private void InitializeOverTime() // NEW - Just updates the summary
+        {
+            UpdateOverTimeSummary();
+        }
+
         private void InitializeCandleArea()
         {
             tmrCandleUpdater.Start();
@@ -99,7 +111,6 @@ namespace BitMexSampleBot
 
         private void InitializeAPI()
         {
-            // NEW
             switch(ddlNetwork.SelectedItem.ToString())
             {
                 case "TestNet":
@@ -351,7 +362,7 @@ namespace BitMexSampleBot
                     c.MACDHistorgram = c.MACDLine - c.MACDSignalLine;
                 }
 
-                // NEW - ATR, setting TR
+                // ATR, setting TR
                 if(c.PCC == 0)
                 {
                     c.SetTR(c.High);
@@ -361,7 +372,7 @@ namespace BitMexSampleBot
                     c.SetTR(Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().Close);
                 }
 
-                // NEW - Setting ATRs
+                // Setting ATRs
                 if(c.PCC == ATR1Period - 1)
                 {
                     c.ATR1 = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(ATR1Period).Average(a => a.TR);
@@ -1007,7 +1018,6 @@ namespace BitMexSampleBot
             }
         }
 
-        // NEW
         private void txtAPIKey_TextChanged(object sender, EventArgs e)
         {
             switch (ddlNetwork.SelectedItem.ToString())
@@ -1043,6 +1053,81 @@ namespace BitMexSampleBot
             Properties.Settings.Default.Save();
         }
 
-        
+
+        // NEW - Over Time ordering
+        private void UpdateOverTimeSummary()
+        {
+            OTContractsPer = Convert.ToInt32(nudOverTimeContracts.Value);
+            OTIntervalSeconds = Convert.ToInt32(nudOverTimeInterval.Value);
+            OTIntervalCount = Convert.ToInt32(nudOverTimeIntervalCount.Value);
+
+            lblOverTimeSummary.Text = (OTContractsPer * OTIntervalCount).ToString() + " Contracts over " + OTIntervalCount.ToString() + " orders during a total of " + (OTIntervalCount * OTIntervalSeconds).ToString() + " seconds.";
+
+        }
+
+        private void nudOverTimeContracts_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateOverTimeSummary();
+        }
+
+        private void nudOverTimeInterval_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateOverTimeSummary();
+        }
+
+        private void nudOverTimeIntervalCount_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateOverTimeSummary();
+        }
+
+        private void btnBuyOverTimeOrder_Click(object sender, EventArgs e)
+        {
+            UpdateOverTimeSummary(); // Makes sure our variables are current.
+
+            OTSide = "Buy";
+
+            tmrTradeOverTime.Interval = OTIntervalSeconds * 1000; // Must multiply by 1000, because timers operate in milliseconds.
+            tmrTradeOverTime.Start(); // Start the timer.
+            stsOTProgress.Value = 0;
+            stsOTProgress.Visible = true;
+        }
+
+        private void btnSellOverTimeOrder_Click(object sender, EventArgs e)
+        {
+            UpdateOverTimeSummary(); // Makes sure our variables are current.
+
+            OTSide = "Sell";
+
+            tmrTradeOverTime.Interval = OTIntervalSeconds * 1000; // Must multiply by 1000, because timers operate in milliseconds.
+            tmrTradeOverTime.Start(); // Start the timer.
+            stsOTProgress.Value = 0;
+            stsOTProgress.Visible = true;
+        }
+
+        private void tmrTradeOverTime_Tick(object sender, EventArgs e)
+        {
+            OTTimerCount++;
+            bitmex.MarketOrder(ActiveInstrument.Symbol, OTSide, OTContractsPer);
+
+            double Percent = ((double)OTTimerCount / (double)OTIntervalCount) * 100;
+            stsOTProgress.Value = Convert.ToInt32(Math.Round(Percent));
+
+            if(OTTimerCount == OTIntervalCount)
+            {
+                OTTimerCount = 0;
+                tmrTradeOverTime.Stop();
+                stsOTProgress.Value = 0;
+                stsOTProgress.Visible = false;
+                
+            }
+        }
+
+        private void btnOverTimeStop_Click(object sender, EventArgs e)
+        {
+            OTTimerCount = 0;
+            stsOTProgress.Value = 0;
+            stsOTProgress.Visible = false;
+            tmrTradeOverTime.Stop();
+        }
     }
 }
