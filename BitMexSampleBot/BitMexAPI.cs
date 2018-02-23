@@ -388,10 +388,19 @@ namespace BitMEX
         public double? MACDLine { get; set; }
         public double? MACDSignalLine { get; set; }
         public double? MACDHistorgram { get; set; }
-        // For TR and ATR
         public double? TR { get; set; }
         public double? ATR1 { get; set; }
         public double? ATR2 { get; set; }
+        public double? GainOrLoss // NEW - For RSI
+        {
+            get { return (Close - Open) ?? 0; } // 0 if null
+        }
+        public double? RS; // NEW - For RSI
+        public double? RSI; // NEW - For RSI
+        public double? AVGGain; // NEW - For RSI
+        public double? AVGLoss; // NEW - For RSI
+
+
 
 
 

@@ -58,12 +58,15 @@ namespace BitMexSampleBot
         int ATR1Period = 7;
         int ATR2Period = 20;
 
-        // NEW - For Over Time
+        // For Over Time
         int OTContractsPer = 0;
         int OTIntervalSeconds = 0;
         int OTIntervalCount = 0;
         int OTTimerCount = 0;
         string OTSide = "Buy";
+
+        // NEW - For RSI
+        int RSIPeriod = 14;
 
         public Form1()
         {
@@ -395,6 +398,40 @@ namespace BitMexSampleBot
                     double ATR2Multiplier = Convert.ToDouble(2 / p1);
                     double? LastATR2 = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().ATR2;
                     c.ATR2 = ((c.TR - LastATR2) * ATR2Multiplier) + LastATR2;
+                }
+
+                // NEW - For RSI
+                if(c.PCC == RSIPeriod - 1)
+                {
+                    // AVG Gain is average of just gains, for all periods, (14), not just periods with gains.  Same goes for losses but with losses.
+                    c.AVGGain = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Where(a => a.GainOrLoss > 0).Take(RSIPeriod).Sum(a => a.GainOrLoss) / RSIPeriod;
+                    c.AVGLoss = (Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Where(a => a.GainOrLoss < 0).Take(RSIPeriod).Sum(a => a.GainOrLoss) / RSIPeriod) * -1;
+
+                    c.RS = c.AVGGain / c.AVGLoss; // Only like this on first one (seeding it)
+                    c.RSI = 100 - (100 / (1 + c.RS));
+                }
+                else if (c.PCC > RSIPeriod - 1)
+                {
+                    // AVG Gain is average of just gains, for all periods, (14), not just periods with gains.  Same goes for losses but with losses.
+                    c.AVGGain = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Where(a => a.GainOrLoss > 0).Take(RSIPeriod).Sum(a => a.GainOrLoss) / RSIPeriod;
+                    c.AVGLoss = (Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Where(a => a.GainOrLoss < 0).Take(RSIPeriod).Sum(a => a.GainOrLoss) / RSIPeriod) * -1;
+
+                    double? LastAVGGain = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().AVGGain;
+                    double? LastAVGLoss = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().AVGLoss;
+                    double? Gain = 0;
+                    double? Loss = 0;
+
+                    if(c.GainOrLoss > 0)
+                    {
+                        Gain = c.GainOrLoss;
+                    }
+                    else if (c.GainOrLoss < 0)
+                    {
+                        Loss = c.GainOrLoss;
+                    }
+
+                    c.RS = (((LastAVGGain * (RSIPeriod - 1)) + Gain) / RSIPeriod) / (((LastAVGLoss * (RSIPeriod - 1)) + Loss) / RSIPeriod);
+                    c.RSI = 100 - (100 / (1 + c.RS));
                 }
 
             }
