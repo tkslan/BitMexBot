@@ -222,7 +222,7 @@
             this.dgvCandles.ReadOnly = true;
             this.dgvCandles.RowHeadersVisible = false;
             this.dgvCandles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dgvCandles.Size = new System.Drawing.Size(1418, 204);
+            this.dgvCandles.Size = new System.Drawing.Size(1227, 204);
             this.dgvCandles.TabIndex = 8;
             // 
             // ddlCandleTimes
@@ -251,7 +251,7 @@
             this.gbCandles.Controls.Add(this.ddlCandleTimes);
             this.gbCandles.Location = new System.Drawing.Point(13, 114);
             this.gbCandles.Name = "gbCandles";
-            this.gbCandles.Size = new System.Drawing.Size(1430, 256);
+            this.gbCandles.Size = new System.Drawing.Size(1239, 256);
             this.gbCandles.TabIndex = 10;
             this.gbCandles.TabStop = false;
             this.gbCandles.Text = "Candles";
@@ -492,7 +492,7 @@
             this.stsOTProgress});
             this.statusStrip1.Location = new System.Drawing.Point(0, 373);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1455, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1257, 22);
             this.statusStrip1.TabIndex = 15;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -731,7 +731,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1455, 395);
+            this.ClientSize = new System.Drawing.Size(1257, 395);
             this.Controls.Add(this.btnOverTimeStop);
             this.Controls.Add(this.lblOverTimeSummary);
             this.Controls.Add(this.label6);
