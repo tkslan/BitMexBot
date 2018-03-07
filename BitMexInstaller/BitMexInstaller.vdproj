@@ -257,7 +257,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BitMex Bot"
         "ProductCode" = "8:{FC4BBDCE-EF66-49BF-90AF-28BAC79EB490}"
-        "PackageCode" = "8:{B7B5695A-866A-466E-AE5E-A5937B0BBCBD}"
+        "PackageCode" = "8:{CCE2B7F6-2F09-4B19-A8CF-CAA7F619B01F}"
         "UpgradeCode" = "8:{F62920B7-8762-42C0-8BDD-3BCF6D54EE3A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -388,7 +388,7 @@
             "Target" = "8:_5502B4AAF4044643B98E7DD85044DFED"
             "Folder" = "8:_2FFCEE784F06441E871650A94B1E7B6D"
             "WorkingFolder" = "8:_15FE7ECB9D1448309763963FF5ECA6DA"
-            "Icon" = "8:"
+            "Icon" = "8:_A7D18CFF4AD24C8E9CF0D39966EE5BEB"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_5FCEDF255C774A8FAC796C4EBE128DB5"
@@ -402,7 +402,7 @@
             "Target" = "8:_5502B4AAF4044643B98E7DD85044DFED"
             "Folder" = "8:_1547A5818CBA4578B3664A5E2D9FFE14"
             "WorkingFolder" = "8:_15FE7ECB9D1448309763963FF5ECA6DA"
-            "Icon" = "8:"
+            "Icon" = "8:_A7D18CFF4AD24C8E9CF0D39966EE5BEB"
             "Feature" = "8:"
             }
         }
