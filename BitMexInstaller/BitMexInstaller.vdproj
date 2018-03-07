@@ -257,7 +257,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BitMex Bot"
         "ProductCode" = "8:{FC4BBDCE-EF66-49BF-90AF-28BAC79EB490}"
-        "PackageCode" = "8:{B53DEDE8-D772-498C-98D9-9A4089E1FEBD}"
+        "PackageCode" = "8:{B7B5695A-866A-466E-AE5E-A5937B0BBCBD}"
         "UpgradeCode" = "8:{F62920B7-8762-42C0-8BDD-3BCF6D54EE3A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -377,7 +377,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_8DB3704C0E5F404EA3AA9B5D1E8B80BE"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_46AE48E31461444E93FAB7E923527D8B"
             {
             "Name" = "8:BitMex Bot"
             "Arguments" = "8:"
@@ -385,13 +385,13 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_A7D18CFF4AD24C8E9CF0D39966EE5BEB"
-            "Folder" = "8:_1547A5818CBA4578B3664A5E2D9FFE14"
+            "Target" = "8:_5502B4AAF4044643B98E7DD85044DFED"
+            "Folder" = "8:_2FFCEE784F06441E871650A94B1E7B6D"
             "WorkingFolder" = "8:_15FE7ECB9D1448309763963FF5ECA6DA"
             "Icon" = "8:"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_AE9E422D0B1D44A38E8FD59A91BB2C2B"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_5FCEDF255C774A8FAC796C4EBE128DB5"
             {
             "Name" = "8:BitMex Bot"
             "Arguments" = "8:"
@@ -399,8 +399,8 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_A7D18CFF4AD24C8E9CF0D39966EE5BEB"
-            "Folder" = "8:_2FFCEE784F06441E871650A94B1E7B6D"
+            "Target" = "8:_5502B4AAF4044643B98E7DD85044DFED"
+            "Folder" = "8:_1547A5818CBA4578B3664A5E2D9FFE14"
             "WorkingFolder" = "8:_15FE7ECB9D1448309763963FF5ECA6DA"
             "Icon" = "8:"
             "Feature" = "8:"
