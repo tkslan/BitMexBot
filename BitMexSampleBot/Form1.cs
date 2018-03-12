@@ -65,8 +65,12 @@ namespace BitMexSampleBot
         int OTTimerCount = 0;
         string OTSide = "Buy";
 
-        // NEW - For RSI
+        // For RSI
         int RSIPeriod = 14;
+
+        // NEW - For Stochastic (STOCH)
+        int STOCHLookbackPeriod = 14;
+        int STOCHDPeriod = 3;
 
         public Form1()
         {
@@ -400,7 +404,7 @@ namespace BitMexSampleBot
                     c.ATR2 = ((c.TR - LastATR2) * ATR2Multiplier) + LastATR2;
                 }
 
-                // NEW - For RSI
+                // For RSI
                 if(c.PCC == RSIPeriod - 1)
                 {
                     // AVG Gain is average of just gains, for all periods, (14), not just periods with gains.  Same goes for losses but with losses.
@@ -432,6 +436,19 @@ namespace BitMexSampleBot
 
                     c.RS = (((LastAVGGain * (RSIPeriod - 1)) + Gain) / RSIPeriod) / (((LastAVGLoss * (RSIPeriod - 1)) + Loss) / RSIPeriod);
                     c.RSI = 100 - (100 / (1 + c.RS));
+                }
+
+                // NEW - For STOCH
+                if(c.PCC >= STOCHLookbackPeriod - 1)
+                {
+                    double? HighInLookback = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(STOCHLookbackPeriod).Max(a => a.High);
+                    double? LowInLookback = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(STOCHLookbackPeriod).Min(a => a.Low);
+
+                    c.STOCHK = ((c.Close - LowInLookback) / (HighInLookback - LowInLookback)) * 100;
+                }
+                if(c.PCC >= STOCHLookbackPeriod - 1 + STOCHDPeriod) // difference of -1 and 2 is 3, to allow for the 3 period SMA required for STOCH
+                {
+                    c.STOCHD = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(STOCHDPeriod).Average(a => a.STOCHK);
                 }
 
             }
