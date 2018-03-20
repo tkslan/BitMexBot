@@ -379,8 +379,8 @@ namespace BitMEX
         public int PCC { get; set; }
         public double? MA1 { get; set; }
         public double? MA2 { get; set; }
-        public double? STOCHK;
-        public double? STOCHD;
+        public double? STOCHK { get; set; }
+        public double? STOCHD { get; set; }
         public double? BBUpper { get; set; }
         public double? BBMiddle { get; set; }
         public double? BBLower { get; set; }
