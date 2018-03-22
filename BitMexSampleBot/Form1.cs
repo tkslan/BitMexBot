@@ -68,9 +68,12 @@ namespace BitMexSampleBot
         // For RSI
         int RSIPeriod = 14;
 
-        // NEW - For Stochastic (STOCH)
+        // For Stochastic (STOCH)
         int STOCHLookbackPeriod = 14;
         int STOCHDPeriod = 3;
+
+        // NEW - For MFI
+        int MFIPeriod = 14;
 
         public Form1()
         {
@@ -438,7 +441,7 @@ namespace BitMexSampleBot
                     c.RSI = 100 - (100 / (1 + c.RS));
                 }
 
-                // NEW - For STOCH
+                // For STOCH
                 if(c.PCC >= STOCHLookbackPeriod - 1)
                 {
                     double? HighInLookback = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(STOCHLookbackPeriod).Max(a => a.High);
@@ -450,6 +453,30 @@ namespace BitMexSampleBot
                 {
                     c.STOCHD = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(STOCHDPeriod).Average(a => a.STOCHK);
                 }
+
+                // NEW - For MFI
+                if(c.PCC > 0)
+                {
+                    // This line uses a function in the candle class to set the Money Flow Change by passing the previous typical price
+                    c.SetMoneyFlowChange(Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().TypicalPrice);
+                }
+                else
+                {
+                    c.MoneyFlowChange = 0;
+                }
+
+                if(c.PCC >= MFIPeriod - 1) // We have enough candles we can actually start calculating the MFI
+                {
+                    // Have to start with MoneyFlowRatio
+                        // Positive flow gets the sum of all the raw money flow on days where money flow change was positive, negative flow is opposite.
+                    double? PositiveFlow = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(MFIPeriod).Where(a => a.MoneyFlowChange > 0).Sum(a => a.RawMoneyFlow);
+                    double? NegativeFlow = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(MFIPeriod).Where(a => a.MoneyFlowChange < 0).Sum(a => a.RawMoneyFlow);
+
+                    c.MoneyFlowRatio = PositiveFlow / NegativeFlow;
+
+                    c.MFI = 100 - (100 / (1 + c.MoneyFlowRatio));
+                }
+
 
             }
 

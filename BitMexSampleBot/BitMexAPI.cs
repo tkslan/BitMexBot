@@ -381,6 +381,19 @@ namespace BitMEX
         public double? MA2 { get; set; }
         public double? STOCHK { get; set; }
         public double? STOCHD { get; set; }
+
+        public double? TypicalPrice
+        {
+            get { return ((High + Low + Close) / 3) ?? 0; } // 0 if null
+        }// NEW - For MFI
+        public double? RawMoneyFlow
+        {
+            get { return (TypicalPrice * Volume) ?? 0; } // 0 if null
+        }// NEW - For MFI
+        public double? MoneyFlowRatio { get; set; } // NEW - For MFI
+        public double? MoneyFlowChange { get; set; } // NEW - For MFI // This gets set to the TypicalPrice of this candle, to the TypicalPrice of the previous candle
+        public double? MFI { get; set; } // NEW - For MFI
+
         public double? BBUpper { get; set; }
         public double? BBMiddle { get; set; }
         public double? BBLower { get; set; }
@@ -393,19 +406,22 @@ namespace BitMEX
         public double? TR { get; set; }
         public double? ATR1 { get; set; }
         public double? ATR2 { get; set; }
-        public double? GainOrLoss // NEW - For RSI
+        public double? GainOrLoss // For RSI
         {
             get { return (Close - Open) ?? 0; } // 0 if null
         }
-        public double? RS; // NEW - For RSI
-        public double? RSI; // NEW - For RSI
-        public double? AVGGain; // NEW - For RSI
-        public double? AVGLoss; // NEW - For RSI
-        
+        public double? RS { get; set; } // For RSI
+        public double? RSI { get; set; } // For RSI
+        public double? AVGGain { get; set; } // For RSI
+        public double? AVGLoss { get; set; } // For RSI
 
 
 
 
+        public void SetMoneyFlowChange(double? PreviousTypicalPrice) // NEW - For MFI
+        {
+            MoneyFlowChange = TypicalPrice - PreviousTypicalPrice;
+        }
 
         public void SetTR(double? PreviousClose)
         {
@@ -417,6 +433,8 @@ namespace BitMEX
 
             TR = TRs.Max();
         }
+
+        
     }
 
     public class Position
