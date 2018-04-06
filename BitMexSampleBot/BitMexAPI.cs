@@ -379,20 +379,23 @@ namespace BitMEX
         public int PCC { get; set; }
         public double? MA1 { get; set; }
         public double? MA2 { get; set; }
+
+        public double? PVT { get; set; } // NEW - for PVT
+
         public double? STOCHK { get; set; }
         public double? STOCHD { get; set; }
 
         public double? TypicalPrice
         {
             get { return ((High + Low + Close) / 3) ?? 0; } // 0 if null
-        }// NEW - For MFI
+        }//  For MFI
         public double? RawMoneyFlow
         {
             get { return (TypicalPrice * Volume) ?? 0; } // 0 if null
-        }// NEW - For MFI
-        public double? MoneyFlowRatio { get; set; } // NEW - For MFI
-        public double? MoneyFlowChange { get; set; } // NEW - For MFI // This gets set to the TypicalPrice of this candle, to the TypicalPrice of the previous candle
-        public double? MFI { get; set; } // NEW - For MFI
+        }//  For MFI
+        public double? MoneyFlowRatio { get; set; } //  For MFI
+        public double? MoneyFlowChange { get; set; } //  For MFI // This gets set to the TypicalPrice of this candle, to the TypicalPrice of the previous candle
+        public double? MFI { get; set; } //  For MFI
 
         public double? BBUpper { get; set; }
         public double? BBMiddle { get; set; }

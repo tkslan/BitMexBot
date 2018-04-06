@@ -454,7 +454,7 @@ namespace BitMexSampleBot
                     c.STOCHD = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(STOCHDPeriod).Average(a => a.STOCHK);
                 }
 
-                // NEW - For MFI
+                // For MFI
                 if(c.PCC > 0)
                 {
                     // This line uses a function in the candle class to set the Money Flow Change by passing the previous typical price
@@ -475,6 +475,20 @@ namespace BitMexSampleBot
                     c.MoneyFlowRatio = PositiveFlow / NegativeFlow;
 
                     c.MFI = 100 - (100 / (1 + c.MoneyFlowRatio));
+                }
+
+                if(c.PCC == 1) // NEW - For PVT
+                {
+                    // We can set the first PVT
+                    double? LastClose = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().Close;
+                    c.PVT = ((c.Close - LastClose) / LastClose) * c.Volume;
+                }
+                else if (c.PCC > 1)
+                {
+                    // We can set all other PVTs
+                    double? LastClose = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().Close;
+                    double? LastPVT = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().PVT;
+                    c.PVT = (((c.Close - LastClose) / LastClose) * c.Volume) + LastPVT;
                 }
 
 
