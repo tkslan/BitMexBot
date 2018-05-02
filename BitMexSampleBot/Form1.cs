@@ -72,8 +72,12 @@ namespace BitMexSampleBot
         int STOCHLookbackPeriod = 14;
         int STOCHDPeriod = 3;
 
-        // NEW - For MFI
+        // For MFI
         int MFIPeriod = 14;
+
+        // NEW - For WMA
+        int WMAPeriod1 = 5;
+        int WMAPeriod2 = 10;
 
         public Form1()
         {
@@ -477,7 +481,7 @@ namespace BitMexSampleBot
                     c.MFI = 100 - (100 / (1 + c.MoneyFlowRatio));
                 }
 
-                if(c.PCC == 1) // NEW - For PVT
+                if(c.PCC == 1) // For PVT
                 {
                     // We can set the first PVT
                     double? LastClose = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().Close;
@@ -489,6 +493,37 @@ namespace BitMexSampleBot
                     double? LastClose = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().Close;
                     double? LastPVT = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().PVT;
                     c.PVT = (((c.Close - LastClose) / LastClose) * c.Volume) + LastPVT;
+                }
+
+                // NEW - For WMA
+                if(c.PCC >= WMAPeriod1)
+                {
+                    double? Total = 0;
+                    double? WMATot = 0;
+
+                    for(int i = 0; i < WMAPeriod1; i++)
+                    {
+                        // Add the closing cost of the nth item back times n + 1 (i = n)..... 
+                        Total += (Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(WMAPeriod1).Skip(i).FirstOrDefault().Close * (WMAPeriod1 - i));
+                        WMATot += WMAPeriod1 - i;
+                    }
+
+                    c.WMA1 = (Total / WMATot);
+                }
+                // NEW - For WMA
+                if (c.PCC >= WMAPeriod2)
+                {
+                    double? Total = 0;
+                    double? WMATot = 0;
+
+                    for (int i = 0; i < WMAPeriod2; i++)
+                    {
+                        // Add the closing cost of the nth item back times n + 1 (i = n)..... we do n + 1 because it starts at 0, minimum weight is 1
+                        Total += (Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Skip(i).FirstOrDefault().Close * (WMAPeriod2 - i));
+                        WMATot += WMAPeriod2 - i;
+                    }
+
+                    c.WMA2 = (Total / WMATot);
                 }
 
 

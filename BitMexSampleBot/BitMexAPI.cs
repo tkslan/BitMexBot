@@ -380,6 +380,9 @@ namespace BitMEX
         public double? MA1 { get; set; }
         public double? MA2 { get; set; }
 
+        public double? WMA1 { get; set; }
+        public double? WMA2 { get; set; }
+
         public double? PVT { get; set; } // NEW - for PVT
 
         public double? STOCHK { get; set; }
