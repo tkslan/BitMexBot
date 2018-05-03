@@ -75,9 +75,12 @@ namespace BitMexSampleBot
         // For MFI
         int MFIPeriod = 14;
 
-        // NEW - For WMA
-        int WMAPeriod1 = 5;
-        int WMAPeriod2 = 10;
+        // For WMA
+        int WMAPeriod1 = 5; // WMA Period 1 must be /2 of period 2 to use in the HMA
+        int WMAPeriod2 = 10; // WMA Period 2 should also be the same as the HMA Period you select if you are using HMA
+
+        // NEW For HMA
+        int HMAPeriod = 10;  
 
         public Form1()
         {
@@ -495,7 +498,7 @@ namespace BitMexSampleBot
                     c.PVT = (((c.Close - LastClose) / LastClose) * c.Volume) + LastPVT;
                 }
 
-                // NEW - For WMA
+                // For WMA
                 if(c.PCC >= WMAPeriod1)
                 {
                     double? Total = 0;
@@ -510,7 +513,8 @@ namespace BitMexSampleBot
 
                     c.WMA1 = (Total / WMATot);
                 }
-                // NEW - For WMA
+
+                // For WMA
                 if (c.PCC >= WMAPeriod2)
                 {
                     double? Total = 0;
@@ -524,6 +528,25 @@ namespace BitMexSampleBot
                     }
 
                     c.WMA2 = (Total / WMATot);
+                }
+
+                // NEW - For HMA
+                if (c.PCC >= HMAPeriod)
+                {
+                    int k = (int)Math.Round(Math.Sqrt(HMAPeriod), 0); // rounds the square root of 10 to nearest integer
+
+                    double? Total = 0;
+                    double? WMATot = 0;
+
+                    for (int i = 0; i < k; i++)
+                    {
+                        // Add the closing cost of the nth item back times n + 1 (i = n)..... we do n + 1 because it starts at 0, minimum weight is 1
+                        Candle LoopCandle = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Skip(i).FirstOrDefault();
+                        Total += (((2 * LoopCandle.WMA1) - (LoopCandle.WMA2)) * (WMAPeriod2 - i));
+                        WMATot += WMAPeriod2 - i;
+                    }
+
+                    c.HMA = (Total / WMATot);
                 }
 
 

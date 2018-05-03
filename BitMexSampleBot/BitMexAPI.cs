@@ -379,11 +379,13 @@ namespace BitMEX
         public int PCC { get; set; }
         public double? MA1 { get; set; }
         public double? MA2 { get; set; }
+        
+        public double? HMA { get; set; } // NEW - For HMA
 
         public double? WMA1 { get; set; }
         public double? WMA2 { get; set; }
 
-        public double? PVT { get; set; } // NEW - for PVT
+        public double? PVT { get; set; } //for PVT
 
         public double? STOCHK { get; set; }
         public double? STOCHD { get; set; }
