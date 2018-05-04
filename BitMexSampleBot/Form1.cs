@@ -79,8 +79,13 @@ namespace BitMexSampleBot
         int WMAPeriod1 = 5; // WMA Period 1 must be /2 of period 2 to use in the HMA
         int WMAPeriod2 = 10; // WMA Period 2 should also be the same as the HMA Period you select if you are using HMA
 
-        // NEW For HMA
-        int HMAPeriod = 10;  
+        // For HMA
+        int HMAPeriod = 10;
+
+        // NEW - For ALMA
+        int ALMAPeriod = 9;
+        int ALMASigma = 6;
+        double? ALMAOffset = 0.85;
 
         public Form1()
         {
@@ -530,7 +535,7 @@ namespace BitMexSampleBot
                     c.WMA2 = (Total / WMATot);
                 }
 
-                // NEW - For HMA
+                // For HMA
                 if (c.PCC >= HMAPeriod)
                 {
                     int k = (int)Math.Round(Math.Sqrt(HMAPeriod), 0); // rounds the square root of 10 to nearest integer
@@ -540,13 +545,33 @@ namespace BitMexSampleBot
 
                     for (int i = 0; i < k; i++)
                     {
-                        // Add the closing cost of the nth item back times n + 1 (i = n)..... we do n + 1 because it starts at 0, minimum weight is 1
                         Candle LoopCandle = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Skip(i).FirstOrDefault();
                         Total += (((2 * LoopCandle.WMA1) - (LoopCandle.WMA2)) * (WMAPeriod2 - i));
                         WMATot += WMAPeriod2 - i;
                     }
 
                     c.HMA = (Total / WMATot);
+                }
+
+                // NEW - For ALMA
+                if (c.PCC >= HMAPeriod)
+                {
+                    double m = Convert.ToDouble(Math.Floor(Convert.ToDecimal((ALMAOffset * (ALMAPeriod - 1)))));
+                    double s = Convert.ToDouble(ALMAPeriod/ALMASigma);
+
+                    double? Total = 0;
+                    double? WMATot = 0;
+
+                    for (int i = 0; i < ALMAPeriod; i++)
+                    {
+                        Candle LoopCandle = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Skip(ALMAPeriod - 1 - i).FirstOrDefault();
+                        double? Weight = Math.Exp(-(Math.Pow((i - m), 2) / 2 * Math.Pow(s, 2)));
+                        double? WeightValue = Weight * LoopCandle.Close;
+                        Total += WeightValue;
+                        WMATot += Weight;
+                    }
+
+                    c.ALMA = (Total / WMATot);
                 }
 
 
