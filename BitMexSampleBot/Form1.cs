@@ -554,7 +554,7 @@ namespace BitMexSampleBot
                 }
 
                 // NEW - For ALMA
-                if (c.PCC >= HMAPeriod)
+                if (c.PCC >= ALMAPeriod)
                 {
                     double m = Convert.ToDouble(Math.Floor(Convert.ToDecimal((ALMAOffset * (ALMAPeriod - 1)))));
                     double s = Convert.ToDouble(ALMAPeriod/ALMASigma);
