@@ -45,7 +45,16 @@ namespace BitMEX
 
             StringBuilder b = new StringBuilder();
             foreach (var item in param)
-                b.Append(string.Format("&{0}={1}", item.Key, WebUtility.UrlEncode(item.Value)));
+            {
+                if (item.Key != "filter" && item.Key != "orders") // SUPER IMPORTANT, WE MUST ENCODE OUR OWN FILTER STRINGS WHEN PASSING HTEM AS QUERY
+                {
+                    b.Append(string.Format("&{0}={1}", item.Key, WebUtility.UrlEncode(item.Value)));
+                }
+                else
+                {
+                    b.Append(string.Format("&{0}={1}", item.Key, item.Value));
+                }
+            }
 
             try { return b.ToString().Substring(1); }
             catch (Exception) { return ""; }
@@ -218,6 +227,13 @@ namespace BitMEX
             param["orderQty"] = Quantity.ToString();
             param["ordType"] = "Market";
             return Query("POST", "/order", param, true);
+        }
+
+        public string BulkOrder(string Orders)
+        {
+            var param = new Dictionary<string, string>();
+            param["orders"] = Orders;
+            return Query("POST", "/order/bulk", param, true);
         }
 
         public string CancelAllOpenOrders(string symbol, string Note = "")

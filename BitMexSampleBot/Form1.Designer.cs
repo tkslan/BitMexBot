@@ -82,6 +82,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.lblOverTimeSummary = new System.Windows.Forms.Label();
             this.btnOverTimeStop = new System.Windows.Forms.Button();
+            this.btnBulkTest = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).BeginInit();
             this.gbCandles.SuspendLayout();
@@ -728,11 +729,23 @@
             this.btnOverTimeStop.UseVisualStyleBackColor = true;
             this.btnOverTimeStop.Click += new System.EventHandler(this.btnOverTimeStop_Click);
             // 
+            // btnBulkTest
+            // 
+            this.btnBulkTest.Enabled = false;
+            this.btnBulkTest.Location = new System.Drawing.Point(625, 5);
+            this.btnBulkTest.Name = "btnBulkTest";
+            this.btnBulkTest.Size = new System.Drawing.Size(75, 23);
+            this.btnBulkTest.TabIndex = 32;
+            this.btnBulkTest.Text = "BulkTest";
+            this.btnBulkTest.UseVisualStyleBackColor = true;
+            this.btnBulkTest.Click += new System.EventHandler(this.btnBulkTest_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1259, 395);
+            this.Controls.Add(this.btnBulkTest);
             this.Controls.Add(this.btnOverTimeStop);
             this.Controls.Add(this.lblOverTimeSummary);
             this.Controls.Add(this.label6);
@@ -838,6 +851,7 @@
         private System.Windows.Forms.Label lblOverTimeSummary;
         private System.Windows.Forms.ToolStripProgressBar stsOTProgress;
         private System.Windows.Forms.Button btnOverTimeStop;
+        private System.Windows.Forms.Button btnBulkTest;
     }
 }
 

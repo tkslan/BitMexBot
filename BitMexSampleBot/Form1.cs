@@ -1232,7 +1232,7 @@ namespace BitMexSampleBot
         }
 
 
-        // NEW - Over Time ordering
+        // Over Time ordering
         private void UpdateOverTimeSummary()
         {
             OTContractsPer = Convert.ToInt32(nudOverTimeContracts.Value);
@@ -1306,6 +1306,19 @@ namespace BitMexSampleBot
             stsOTProgress.Value = 0;
             stsOTProgress.Visible = false;
             tmrTradeOverTime.Stop();
+        }
+
+        private void btnBulkTest_Click(object sender, EventArgs e)
+        {
+            string orders = "[{\"orderQty\": 89, \"price\": 9479, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+                " { \"orderQty\": 143, \"price\": 9527, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+                " { \"orderQty\": 231, \"price\": 9605, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+                " { \"orderQty\": 374, \"price\": 9731, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+                " { \"orderQty\": 605, \"price\": 9935, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+                " { \"orderQty\": 978, \"price\": 10266, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+                " { \"orderQty\": 1583, \"price\": 10800, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}]";
+            bitmex.BulkOrder(orders);
+         
         }
     }
 }
