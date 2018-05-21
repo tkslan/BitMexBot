@@ -1310,15 +1310,66 @@ namespace BitMexSampleBot
 
         private void btnBulkTest_Click(object sender, EventArgs e)
         {
-            string orders = "[{\"orderQty\": 89, \"price\": 9479, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
-                " { \"orderQty\": 143, \"price\": 9527, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
-                " { \"orderQty\": 231, \"price\": 9605, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
-                " { \"orderQty\": 374, \"price\": 9731, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
-                " { \"orderQty\": 605, \"price\": 9935, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
-                " { \"orderQty\": 978, \"price\": 10266, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
-                " { \"orderQty\": 1583, \"price\": 10800, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}]";
-            bitmex.BulkOrder(orders);
+            //string orders = "[{\"orderQty\": 89, \"price\": 9479, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+            //    " { \"orderQty\": 143, \"price\": 9527, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+            //    " { \"orderQty\": 231, \"price\": 9605, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+            //    " { \"orderQty\": 374, \"price\": 9731, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+            //    " { \"orderQty\": 605, \"price\": 9935, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+            //    " { \"orderQty\": 978, \"price\": 10266, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}," +
+            //    " { \"orderQty\": 1583, \"price\": 10800, \"side\": \"Sell\", \"symbol\": \"XBTUSD\"}]";
+            //bitmex.BulkOrder(orders);
+
+
+
+            List<Order> Orders = new List<Order>();
+
+            // While we are manually testing, we are going to manually code in the orders, but
+            //  idealy you would use controls to determine how to make orders
+            Order Ord = new Order();
+            Ord.OrderQty = 10;
+            Ord.Price = 10000;
+            Ord.Side = "Sell";
+            Ord.Symbol = ActiveInstrument.Symbol;
+
+            Order Ord2 = new Order();
+            Ord2.OrderQty = 20;
+            Ord2.Price = 10010;
+            Ord2.Side = "Sell";
+            Ord2.Symbol = ActiveInstrument.Symbol;
+
+            Orders.Add(Ord);
+            Orders.Add(Ord2);
+
+
+            if(Orders.Any())
+            {
+                string OrderJSON = BuildBulkOrder(Orders);
+                bitmex.BulkOrder(OrderJSON);
+            }
+            
          
+        }
+
+        private string BuildBulkOrder(List<Order> Orders)
+        {
+            StringBuilder str = new StringBuilder();
+
+            str.Append("[");
+
+            int i = 1;
+            foreach(Order o in Orders)
+            {
+                if(i > 1)
+                {
+                    str.Append(", ");
+                }
+                str.Append("{\"orderQty\": " + o.OrderQty.ToString() + ", \"price\": " + o.Price.ToString() + ", \"side\": \"" + o.Side + "\", \"symbol\": \"" + o.Symbol + "\"}");
+                i++;
+            }
+
+            str.Append("]");
+
+            return str.ToString();
         }
     }
 }
