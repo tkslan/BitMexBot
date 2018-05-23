@@ -83,6 +83,7 @@
             this.lblOverTimeSummary = new System.Windows.Forms.Label();
             this.btnOverTimeStop = new System.Windows.Forms.Button();
             this.btnBulkTest = new System.Windows.Forms.Button();
+            this.btnBulkShift = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCandles)).BeginInit();
             this.gbCandles.SuspendLayout();
@@ -731,7 +732,6 @@
             // 
             // btnBulkTest
             // 
-            this.btnBulkTest.Enabled = false;
             this.btnBulkTest.Location = new System.Drawing.Point(625, 5);
             this.btnBulkTest.Name = "btnBulkTest";
             this.btnBulkTest.Size = new System.Drawing.Size(75, 23);
@@ -740,11 +740,22 @@
             this.btnBulkTest.UseVisualStyleBackColor = true;
             this.btnBulkTest.Click += new System.EventHandler(this.btnBulkTest_Click);
             // 
+            // btnBulkShift
+            // 
+            this.btnBulkShift.Location = new System.Drawing.Point(625, 36);
+            this.btnBulkShift.Name = "btnBulkShift";
+            this.btnBulkShift.Size = new System.Drawing.Size(75, 23);
+            this.btnBulkShift.TabIndex = 33;
+            this.btnBulkShift.Text = "Bulk Shift";
+            this.btnBulkShift.UseVisualStyleBackColor = true;
+            this.btnBulkShift.Click += new System.EventHandler(this.btnBulkShift_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1259, 395);
+            this.Controls.Add(this.btnBulkShift);
             this.Controls.Add(this.btnBulkTest);
             this.Controls.Add(this.btnOverTimeStop);
             this.Controls.Add(this.lblOverTimeSummary);
@@ -852,6 +863,7 @@
         private System.Windows.Forms.ToolStripProgressBar stsOTProgress;
         private System.Windows.Forms.Button btnOverTimeStop;
         private System.Windows.Forms.Button btnBulkTest;
+        private System.Windows.Forms.Button btnBulkShift;
     }
 }
 

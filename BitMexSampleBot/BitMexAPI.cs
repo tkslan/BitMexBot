@@ -236,6 +236,13 @@ namespace BitMEX
             return Query("POST", "/order/bulk", param, true);
         }
 
+        public string AmendBulkOrder(string Orders)
+        {
+            var param = new Dictionary<string, string>();
+            param["orders"] = Orders;
+            return Query("PUT", "/order/bulk", param, true);
+        }
+
         public string CancelAllOpenOrders(string symbol, string Note = "")
         {
             var param = new Dictionary<string, string>();
@@ -403,6 +410,14 @@ namespace BitMEX
         public double? WMA1 { get; set; }
         public double? WMA2 { get; set; }
 
+        public double? BBUpper { get; set; }
+        public double? BBMiddle { get; set; }
+        public double? BBLower { get; set; }
+        public double? BBPercentB // NEW - For BB Update
+        {
+            get { return ((Close - BBLower) / (BBUpper - BBLower)) ?? 0; } // 0 if null
+        }
+
         public double? PVT { get; set; } //for PVT
 
         public double? STOCHK { get; set; }
@@ -420,9 +435,7 @@ namespace BitMEX
         public double? MoneyFlowChange { get; set; } //  For MFI // This gets set to the TypicalPrice of this candle, to the TypicalPrice of the previous candle
         public double? MFI { get; set; } //  For MFI
 
-        public double? BBUpper { get; set; }
-        public double? BBMiddle { get; set; }
-        public double? BBLower { get; set; }
+        
         public double? EMA1 { get; set; }
         public double? EMA2 { get; set; }
         public double? EMA3 { get; set; }

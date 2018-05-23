@@ -1350,7 +1350,7 @@ namespace BitMexSampleBot
          
         }
 
-        private string BuildBulkOrder(List<Order> Orders)
+        private string BuildBulkOrder(List<Order> Orders, bool Amend = false)
         {
             StringBuilder str = new StringBuilder();
 
@@ -1363,13 +1363,37 @@ namespace BitMexSampleBot
                 {
                     str.Append(", ");
                 }
-                str.Append("{\"orderQty\": " + o.OrderQty.ToString() + ", \"price\": " + o.Price.ToString() + ", \"side\": \"" + o.Side + "\", \"symbol\": \"" + o.Symbol + "\"}");
+                str.Append("{");
+                if(Amend == true)
+                {
+                    str.Append("\"orderID\": \"" + o.OrderId.ToString() + "\", ");
+                }
+                str.Append("\"orderQty\": " + o.OrderQty.ToString() + ", \"price\": " + o.Price.ToString() + ", \"side\": \"" + o.Side + "\", \"symbol\": \"" + o.Symbol + "\"");
+                str.Append("}");
                 i++;
             }
 
             str.Append("]");
 
             return str.ToString();
+        }
+
+        private void btnBulkShift_Click(object sender, EventArgs e)
+        {
+            List<Order> OpenOrders = bitmex.GetOpenOrders(ActiveInstrument.Symbol);
+
+            if (OpenOrders.Any())
+            {
+                foreach (Order o in OpenOrders)
+                {
+                    o.Price += 20;
+                }
+
+                string OrderJSON = BuildBulkOrder(OpenOrders, true);
+                bitmex.AmendBulkOrder(OrderJSON);
+            }
+
+            
         }
     }
 }
