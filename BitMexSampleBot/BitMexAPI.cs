@@ -418,6 +418,12 @@ namespace BitMEX
             get { return ((Close - BBLower) / (BBUpper - BBLower)) ?? 0; } // 0 if null
         }
 
+        public double? TypicalPriceVolume
+        {
+            get { return (TypicalPrice * Volume) ?? 0; } // 0 if null
+        }
+        public double? VWAP { get; set; }
+
         public double? PVT { get; set; } //for PVT
 
         public double? STOCHK { get; set; }

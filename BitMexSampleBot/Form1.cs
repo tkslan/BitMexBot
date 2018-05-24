@@ -82,10 +82,13 @@ namespace BitMexSampleBot
         // For HMA
         int HMAPeriod = 10;
 
-        // NEW - For ALMA
+        // For ALMA
         int ALMAPeriod = 9;
         int ALMASigma = 6;
         double? ALMAOffset = 0.85;
+
+        // NEW - For VWAP
+        int VWAPPeriod = 20; // Sets a lookback limit so we don't go too far back
 
         public Form1()
         {
@@ -553,7 +556,7 @@ namespace BitMexSampleBot
                     c.HMA = (Total / WMATot);
                 }
 
-                // NEW - For ALMA
+                // For ALMA
                 if (c.PCC >= ALMAPeriod)
                 {
                     double m = Convert.ToDouble(Math.Floor(Convert.ToDecimal((ALMAOffset * (ALMAPeriod - 1)))));
@@ -573,6 +576,14 @@ namespace BitMexSampleBot
 
                     c.ALMA = (Total / WMATot);
                 }
+
+
+                // NEW - For VWAP
+                double? CumulativeTypicalPriceVolume = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(VWAPPeriod).Sum(a => a.TypicalPriceVolume);
+                double? CumulativeVolume = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(VWAPPeriod).Sum(a => a.Volume);
+
+                c.VWAP = CumulativeTypicalPriceVolume / CumulativeVolume;
+
 
 
             }
