@@ -434,10 +434,6 @@ namespace BitMexSampleBot
                 }
                 else if (c.PCC > RSIPeriod - 1)
                 {
-                    // AVG Gain is average of just gains, for all periods, (14), not just periods with gains.  Same goes for losses but with losses.
-                    c.AVGGain = Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Where(a => a.GainOrLoss > 0).Take(RSIPeriod).Sum(a => a.GainOrLoss) / RSIPeriod;
-                    c.AVGLoss = (Candles.Where(a => a.TimeStamp <= c.TimeStamp).OrderByDescending(a => a.TimeStamp).Where(a => a.GainOrLoss < 0).Take(RSIPeriod).Sum(a => a.GainOrLoss) / RSIPeriod) * -1;
-
                     double? LastAVGGain = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().AVGGain;
                     double? LastAVGLoss = Candles.Where(a => a.TimeStamp < c.TimeStamp).OrderByDescending(a => a.TimeStamp).Take(1).FirstOrDefault().AVGLoss;
                     double? Gain = 0;
@@ -449,10 +445,13 @@ namespace BitMexSampleBot
                     }
                     else if (c.GainOrLoss < 0)
                     {
-                        Loss = c.GainOrLoss;
+                        Loss = c.GainOrLoss * -1;
                     }
 
-                    c.RS = (((LastAVGGain * (RSIPeriod - 1)) + Gain) / RSIPeriod) / (((LastAVGLoss * (RSIPeriod - 1)) + Loss) / RSIPeriod);
+                    c.AVGGain = (((LastAVGGain * (RSIPeriod - 1)) + Gain) / RSIPeriod);
+                    c.AVGLoss = (((LastAVGLoss * (RSIPeriod - 1)) + Loss) / RSIPeriod);
+
+                    c.RS = c.AVGGain / c.AVGLoss;
                     c.RSI = 100 - (100 / (1 + c.RS));
                 }
 

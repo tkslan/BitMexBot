@@ -82,7 +82,7 @@ namespace BitMEX
 
         private long GetNonce()
         {
-            DateTime yearBegin = new DateTime(1990, 1, 1);
+            DateTime yearBegin = new DateTime(2018, 8, 7);
             return DateTime.UtcNow.Ticks - yearBegin.Ticks;
         }
 
@@ -92,6 +92,15 @@ namespace BitMEX
             {
                 return hash.ComputeHash(messageBytes);
             }
+        }
+
+        public string GetExpiresArg()
+        {
+            long timestamp = (long)((DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+
+            string expires = (timestamp + 60).ToString();
+
+            return (expires);
         }
 
         private string Query(string method, string function, Dictionary<string, string> param = null, bool auth = false, bool json = false)
@@ -105,12 +114,15 @@ namespace BitMEX
 
             if (auth)
             {
-                string nonce = GetNonce().ToString();
-                string message = method + url + nonce + postData;
+                //string nonce = GetNonce().ToString();
+                //string message = method + url + nonce + postData;
+                string expires = GetExpiresArg();
+                string message = method + url + expires + postData;
                 byte[] signatureBytes = hmacsha256(Encoding.UTF8.GetBytes(apiSecret), Encoding.UTF8.GetBytes(message));
                 string signatureString = ByteArrayToString(signatureBytes);
 
-                webRequest.Headers.Add("api-nonce", nonce);
+                //webRequest.Headers.Add("api-nonce", nonce);
+                webRequest.Headers.Add("api-expires", expires);
                 webRequest.Headers.Add("api-key", apiKey);
                 webRequest.Headers.Add("api-signature", signatureString);
             }
