@@ -401,15 +401,22 @@ namespace BitMEX
         public double TickSize { get; set; }
         public double Volume24H { get; set; }
     }
-
-    public class Candle
-    {
+    public class CandleBase {
         public DateTime TimeStamp { get; set; }
         public double? Open { get; set; }
         public double? Close { get; set; }
         public double? High { get; set; }
         public double? Low { get; set; }
         public double? Volume { get; set; }
+
+        public double? RSI { get; set; }
+        public double? RSI2 { get; set; } 
+        public double? STOCHK { get; set; }
+        public double? STOCHD { get; set; }
+
+    }
+    public class Candle:CandleBase
+    {
         public int Trades { get; set; }
         public int PCC { get; set; }
         public double? MA1 { get; set; }
@@ -438,9 +445,6 @@ namespace BitMEX
 
         public double? PVT { get; set; } //for PVT
 
-        public double? STOCHK { get; set; }
-        public double? STOCHD { get; set; }
-
         public double? TypicalPrice
         {
             get { return ((High + Low + Close) / 3) ?? 0; } // 0 if null
@@ -468,7 +472,6 @@ namespace BitMEX
             get { return (Close - Open) ?? 0; } // 0 if null
         }
         public double? RS { get; set; } // For RSI
-        public double? RSI { get; set; } // For RSI
         public double? AVGGain { get; set; } // For RSI
         public double? AVGLoss { get; set; } // For RSI
 
